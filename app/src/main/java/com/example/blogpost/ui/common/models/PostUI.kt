@@ -1,12 +1,12 @@
 package com.example.blogpost.ui.common.models
 
 data class PostUI(
-    val name: String = "",
+    val title: String = "",
     val date: String = "",
     val imageUrl: String = "",
-    val author: AuthorUI,
-    val text: String,
-    val likesCount: Int,
-    val commentsCount: Int,
+    val author: AuthorUI = AuthorUI(),
+    val body: String = "",
+    val likesCount: Int = 0,
+    val commentsCount: Int = 0,
     val isLiked: Boolean = false
 )

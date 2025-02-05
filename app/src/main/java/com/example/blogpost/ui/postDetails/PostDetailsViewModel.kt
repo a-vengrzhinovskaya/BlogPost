@@ -2,5 +2,8 @@ package com.example.blogpost.ui.postDetails
 
 import com.example.blogpost.ui.common.StateViewModel
 
-class PostDetailsViewModel: StateViewModel<PostDetailsScreenState>() {
+class PostDetailsViewModel: StateViewModel<PostDetailsScreenState>(PostDetailsScreenState()) {
+    fun fetchPostDetails(postId: Int) {
+
+    }
 }

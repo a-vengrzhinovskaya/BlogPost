@@ -11,14 +11,14 @@ class FeedViewModel(
     fun fetchPosts() {
         val posts = List(10) {
             PostUI(
-                name = "Cats",
+                title = "Cats",
                 date = "04.02.2025",
-                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlVTWL4dqk9ZokaiRQe0kdV3_dNvkB7A3xTw&s",
+                imageUrl = "https://cataas.com/cat?" + (0..1_000_000).random(),
                 author = AuthorUI(
                     name = "Cats",
                     avatarImageUrl = "https://www.cdc.gov/healthy-pets/media/images/2024/04/Cat-on-couch.jpg"
                 ),
-                text = "meow meow meow meow",
+                body = "meow meow meow meow",
                 likesCount = 10,
                 commentsCount = 5
             )
