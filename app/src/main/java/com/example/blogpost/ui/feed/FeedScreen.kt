@@ -55,8 +55,8 @@ private fun FeedScreenBody(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(extraLargeDp)
     ) {
-        items(state.posts) { post ->
-            PostItem(post)
+        items(state.postsWithAuthor) {
+            PostItem(post = it.first, author = it.second)
         }
     }
 }

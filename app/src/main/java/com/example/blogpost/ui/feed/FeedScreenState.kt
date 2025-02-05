@@ -1,7 +1,8 @@
 package com.example.blogpost.ui.feed
 
-import com.example.blogpost.ui.common.models.PostUI
+import com.example.blogpost.ui.common.models.post.PostUI
+import com.example.blogpost.ui.common.models.user.UserUI
 
 data class FeedScreenState(
-    val posts: List<PostUI> = emptyList()
+    val postsWithAuthor: List<Pair<PostUI, UserUI>> = emptyList()
 )

@@ -20,11 +20,15 @@ import com.example.blogpost.R
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryCard
 import com.example.blogpost.ui.common.components.SmallSpacer
-import com.example.blogpost.ui.common.models.PostUI
+import com.example.blogpost.ui.common.models.post.PostUI
+import com.example.blogpost.ui.common.models.user.UserUI
 import com.example.blogpost.ui.theme.mediumDp
 
 @Composable
-fun PostItem(post: PostUI) {
+fun PostItem(
+    post: PostUI,
+    author: UserUI
+) {
     PrimaryCard {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -35,7 +39,7 @@ fun PostItem(post: PostUI) {
                     .size(32.dp)
                     .clip(CircleShape),
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(post.author.avatarImageUrl)
+                    .data(author.avatarImageUrl)
                     .build(),
                 contentScale = ContentScale.Crop,
                 contentDescription = null
@@ -43,7 +47,7 @@ fun PostItem(post: PostUI) {
 
             SmallSpacer()
 
-            Text(text = post.author.name)
+            Text(text = author.name)
 
             Spacer(modifier = Modifier.weight(1f))
 

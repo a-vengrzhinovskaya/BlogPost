@@ -1,28 +1,28 @@
 package com.example.blogpost.ui.feed
 
+import androidx.lifecycle.viewModelScope
+import com.example.blogpost.domain.posts.GetPostsWithAuthorUseCase
 import com.example.blogpost.ui.common.StateViewModel
-import com.example.blogpost.ui.common.models.AuthorUI
-import com.example.blogpost.ui.common.models.PostUI
+import com.example.blogpost.ui.common.models.post.toUI
+import com.example.blogpost.ui.common.models.user.toUI
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class FeedViewModel(
-
+    private val getPostsWithAuthorUseCase: GetPostsWithAuthorUseCase
 ) : StateViewModel<FeedScreenState>(FeedScreenState()) {
     fun fetchPosts() {
-        val posts = List(10) {
-            PostUI(
-                title = "Cats",
-                date = "04.02.2025",
-                imageUrl = "https://cataas.com/cat?" + (0..1_000_000).random(),
-                author = AuthorUI(
-                    name = "Cats",
-                    avatarImageUrl = "https://www.cdc.gov/healthy-pets/media/images/2024/04/Cat-on-couch.jpg"
-                ),
-                body = "meow meow meow meow",
-                likesCount = 10,
-                commentsCount = 5
-            )
+        viewModelScope.launch {
+            getPostsWithAuthorUseCase.invoke().collectLatest { postsWithAuthor ->
+                mutableState.update { feedScreenState ->
+                    feedScreenState.copy(
+                        postsWithAuthor = postsWithAuthor.map {
+                            Pair(it.first.toUI(), it.second.toUI())
+                        }
+                    )
+                }
+            }
         }
-        mutableState.update { it.copy(posts = posts) }
     }
 }
