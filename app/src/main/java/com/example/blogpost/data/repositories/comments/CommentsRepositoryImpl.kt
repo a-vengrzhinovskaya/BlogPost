@@ -21,7 +21,7 @@ class CommentsRepositoryImpl(
     }.flowOn(coroutineContext)
 
     override fun getCommentById(id: String): Flow<Comment> = flow {
-        val comment = api.getCommentById(id).toDomain()
+        val comment = api.getCommentById(id).records.first().toDomain()
         emit(comment)
     }.flowOn(coroutineContext)
 }

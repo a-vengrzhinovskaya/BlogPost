@@ -1,9 +1,9 @@
 package com.example.blogpost.ui.common.models.post
 
 import com.example.blogpost.domain.posts.models.Post
-import com.example.blogpost.ui.common.models.user.UserUI
 
 fun Post.toUI() = PostUI(
+    id = id,
     title = title,
     date = date,
     imageUrl = imageUrl,

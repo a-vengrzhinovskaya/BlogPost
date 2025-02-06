@@ -24,7 +24,8 @@ class PostsRepositoryImpl(
     }.flowOn(coroutineContext)
 
     override fun getPostById(id: String): Flow<Post> = flow {
-        val post = postsCache.firstOrNull { it.id == id } ?: api.getPostById(id).toDomain()
+        val post =
+            postsCache.firstOrNull { it.id == id } ?: api.getPostById(id).toDomain()
         emit(post)
     }.flowOn(coroutineContext)
 

@@ -19,12 +19,12 @@ interface BlogPostAPI {
     suspend fun getAllPosts(): PostsResponse
 
     @GET("Posts/{id}")
-    suspend fun getPostById(@Path("id") id: String): PostsResponse.Record //TODO: не нужно?
+    suspend fun getPostById(@Path("id") id: String): PostsResponse.Record
 
     //Comments
     @GET("Comments")
     suspend fun getAllComments(): CommentsResponse //TODO: не нужно?
 
     @GET("Comments/{id}")
-    suspend fun getCommentById(@Path("id") id: String): CommentsResponse.Record
+    suspend fun getCommentById(@Path("id") id: String): CommentsResponse
 }
