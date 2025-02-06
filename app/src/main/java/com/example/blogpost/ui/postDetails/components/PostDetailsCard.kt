@@ -18,7 +18,7 @@ import coil3.request.ImageRequest
 import com.example.blogpost.R
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryCard
-import com.example.blogpost.ui.common.models.post.PostUI
+import com.example.blogpost.ui.common.models.posts.PostUI
 import com.example.blogpost.ui.feed.components.FeedbackItem
 import com.example.blogpost.ui.theme.mediumDp
 

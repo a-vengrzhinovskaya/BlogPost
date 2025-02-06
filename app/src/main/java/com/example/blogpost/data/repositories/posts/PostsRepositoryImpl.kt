@@ -13,7 +13,7 @@ class PostsRepositoryImpl(
     private val api: BlogPostAPI,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : PostsRepository {
-    private val postsCache: MutableList<Post> = mutableListOf()
+    private val postsCache = mutableListOf<Post>()
 
     override fun getPosts(): Flow<List<Post>> = flow {
         val posts = api.getAllPosts().records.map {

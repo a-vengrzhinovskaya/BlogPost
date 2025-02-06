@@ -1,12 +1,10 @@
-package com.example.blogpost.ui.feed.components
+package com.example.blogpost.ui.postDetails.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,23 +15,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
-import com.example.blogpost.R
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryCard
 import com.example.blogpost.ui.common.components.SmallSpacer
-import com.example.blogpost.ui.common.models.posts.PostUI
 import com.example.blogpost.ui.common.models.users.UserUI
-import com.example.blogpost.ui.theme.mediumDp
+import com.example.blogpost.ui.postDetails.models.CommentUI
 
 @Composable
-fun PostItem(
-    post: PostUI,
-    author: UserUI,
-    onPostClick: (String) -> Unit
+fun CommentItem(
+    comment: CommentUI,
+    author: UserUI
 ) {
-    PrimaryCard(
-        modifier = Modifier.clickable { onPostClick(post.id) }
-    ) {
+    PrimaryCard {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -55,47 +48,11 @@ fun PostItem(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(text = post.date)
+            Text(text = comment.date)
         }
 
         MediumSpacer()
 
-        Text(text = post.title)
-
-        SmallSpacer()
-
-        MediumSpacer()
-
-        SubcomposeAsyncImage(
-            modifier = Modifier
-                .size(200.dp)
-                .clip(shape = RoundedCornerShape(mediumDp)),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(post.imageUrl)
-                .build(),
-            contentScale = ContentScale.Crop,
-            contentDescription = null
-        )
-
-        MediumSpacer()
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row {
-                FeedbackItem(
-                    iconId = R.drawable.ic_like_filled,
-                    count = post.likesCount
-                )
-
-                MediumSpacer()
-
-                FeedbackItem(
-                    iconId = R.drawable.ic_comments_filled,
-                    count = post.commentsCount
-                )
-            }
-        }
+        Text(text = comment.body)
     }
 }
