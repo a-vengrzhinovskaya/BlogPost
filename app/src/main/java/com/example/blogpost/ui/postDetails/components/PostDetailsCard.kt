@@ -1,4 +1,4 @@
-package com.example.blogpost.ui.postDetails
+package com.example.blogpost.ui.postDetails.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
