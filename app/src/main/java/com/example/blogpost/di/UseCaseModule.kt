@@ -7,5 +7,5 @@ import org.koin.dsl.module
 
 val useCaseModule = module {
     factoryOf(::GetCommentsByPostIdUseCase)
-    factoryOf(::GetPostsWithAuthorUseCase)
+    factory { GetPostsWithAuthorUseCase(get(), get()) }
 }

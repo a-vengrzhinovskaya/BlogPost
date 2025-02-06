@@ -13,15 +13,24 @@ class PostsRepositoryImpl(
     private val api: BlogPostAPI,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : PostsRepository {
+    private val postsCache: MutableList<Post> = mutableListOf()
+
     override fun getPosts(): Flow<List<Post>> = flow {
         val posts = api.getAllPosts().records.map {
             it.toDomain()
         }
+        cachePosts(posts)
         emit(posts)
     }.flowOn(coroutineContext)
 
     override fun getPostById(id: String): Flow<Post> = flow {
-        val post = api.getPostById(id).toDomain()
+        val post = postsCache.firstOrNull { it.id == id } ?: api.getPostById(id).toDomain()
         emit(post)
     }.flowOn(coroutineContext)
+
+    private fun cachePosts(newPosts: List<Post>) = newPosts.forEach { newPost ->
+        if (!postsCache.contains(newPost)) {
+            postsCache.add(newPost)
+        }
+    }
 }

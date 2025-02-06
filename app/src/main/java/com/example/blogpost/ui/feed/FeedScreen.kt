@@ -11,12 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.blogpost.ui.feed.components.PostItem
+import com.example.blogpost.ui.postDetails.PostDetailsScreen
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,7 +37,8 @@ class FeedScreen : Screen {
             content = { paddingValues ->
                 FeedScreenBody(
                     paddingValues = paddingValues,
-                    state = state
+                    state = state,
+                    onPostClick = remember { { navigator.push(PostDetailsScreen(it)) } }
                 )
             }
         )
@@ -45,7 +48,8 @@ class FeedScreen : Screen {
 @Composable
 private fun FeedScreenBody(
     paddingValues: PaddingValues,
-    state: FeedScreenState
+    state: FeedScreenState,
+    onPostClick: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -56,7 +60,11 @@ private fun FeedScreenBody(
         verticalArrangement = Arrangement.spacedBy(extraLargeDp)
     ) {
         items(state.postsWithAuthor) {
-            PostItem(post = it.first, author = it.second)
+            PostItem(
+                post = it.post,
+                author = it.author,
+                onPostClick = onPostClick
+            )
         }
     }
 }

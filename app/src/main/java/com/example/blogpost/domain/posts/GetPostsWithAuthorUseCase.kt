@@ -1,22 +1,26 @@
 package com.example.blogpost.domain.posts
 
-import com.example.blogpost.domain.posts.models.Post
+import com.example.blogpost.domain.posts.models.PostWithAuthor
 import com.example.blogpost.domain.users.UsersRepository
-import com.example.blogpost.domain.users.models.User
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 class GetPostsWithAuthorUseCase(
     private val usersRepository: UsersRepository,
-    private val postsRepository: PostsRepository
+    private val postsRepository: PostsRepository,
+    private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) {
-    operator fun invoke(): Flow<List<Pair<Post, User>>> = flow {
+    suspend operator fun invoke(): List<PostWithAuthor> = withContext(coroutineContext) {
+        val postsWithAuthor = mutableListOf<PostWithAuthor>()
         postsRepository.getPosts().collectLatest {
-            emit(it.map { post ->
-                Pair(post, usersRepository.getUserById(post.authorId).first())
-            })
+            it.forEach { post ->
+                val author = usersRepository.getUserById(post.authorId).first()
+                postsWithAuthor.add(PostWithAuthor(post, author))
+            }
         }
+        postsWithAuthor
     }
 }

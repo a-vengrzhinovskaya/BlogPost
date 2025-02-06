@@ -1,6 +1,7 @@
 package com.example.blogpost.ui.common.models.post
 
 data class PostUI(
+    val id: String = "",
     val title: String = "",
     val date: String = "",
     val imageUrl: String = "",

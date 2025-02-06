@@ -1,11 +1,9 @@
-package com.example.blogpost.ui.feed.components
+package com.example.blogpost.ui.postDetails
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,49 +18,21 @@ import coil3.request.ImageRequest
 import com.example.blogpost.R
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryCard
-import com.example.blogpost.ui.common.components.SmallSpacer
 import com.example.blogpost.ui.common.models.post.PostUI
-import com.example.blogpost.ui.common.models.user.UserUI
+import com.example.blogpost.ui.feed.components.FeedbackItem
 import com.example.blogpost.ui.theme.mediumDp
 
 @Composable
-fun PostItem(
+fun PostDetailsCard(
     post: PostUI,
-    author: UserUI,
-    onPostClick: (String) -> Unit
+    onLikeClick: () -> Unit
 ) {
-    PrimaryCard(
-        modifier = Modifier.clickable { onPostClick(post.id) }
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SubcomposeAsyncImage(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(author.avatarImageUrl)
-                    .build(),
-                contentScale = ContentScale.Crop,
-                contentDescription = null
-            )
-
-            SmallSpacer()
-
-            Text(text = author.name)
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(text = post.date)
-        }
+    PrimaryCard {
+        Text(text = post.title)
 
         MediumSpacer()
 
-        Text(text = post.title)
-
-        SmallSpacer()
+        Text(text = post.body)
 
         MediumSpacer()
 
@@ -81,7 +51,8 @@ fun PostItem(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row {
                 FeedbackItem(
