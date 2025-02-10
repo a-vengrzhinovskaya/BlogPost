@@ -105,7 +105,7 @@ private fun PostDetailsBody(
                         value = state.activeUserComment,
                         labelText = "Комментарий",
                         onValueChange = onCommentTextFieldValueChange,
-                        trailingIcon = R.drawable.ic_send,
+                        trailingIconId = R.drawable.ic_send,
                         onTrailingIconClick = onSendClick
                     )
                 }

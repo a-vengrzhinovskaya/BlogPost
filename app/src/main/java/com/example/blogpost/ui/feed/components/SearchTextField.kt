@@ -1,4 +1,4 @@
-package com.example.blogpost.ui.postDetails.components
+package com.example.blogpost.ui.feed.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,13 +12,13 @@ import androidx.compose.ui.res.painterResource
 import com.example.blogpost.ui.theme.mediumDp
 
 @Composable
-fun CommentTextField(
+fun SearchTextField(
     modifier: Modifier = Modifier,
     value: String,
     labelText: String,
     onValueChange: (String) -> Unit,
-    trailingIconId: Int,
-    onTrailingIconClick: () -> Unit
+    leadingIconId: Int,
+    onLeadingIconClick: () -> Unit
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -27,14 +27,12 @@ fun CommentTextField(
         shape = RoundedCornerShape(mediumDp),
         value = value,
         onValueChange = onValueChange,
+        singleLine = true,
         label = { Text(text = labelText) },
-        trailingIcon = {
-            IconButton(
-                enabled = value.isNotBlank(),
-                onClick = onTrailingIconClick
-            ) {
+        leadingIcon = {
+            IconButton(onClick = onLeadingIconClick) {
                 Icon(
-                    painter = painterResource(id = trailingIconId),
+                    painter = painterResource(id = leadingIconId),
                     contentDescription = null
                 )
             }

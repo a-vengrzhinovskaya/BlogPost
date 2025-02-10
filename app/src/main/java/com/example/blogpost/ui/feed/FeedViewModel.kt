@@ -10,14 +10,21 @@ import kotlinx.coroutines.launch
 class FeedViewModel(
     private val getPostsWithAuthorUseCase: GetPostsWithAuthorUseCase
 ) : StateViewModel<FeedScreenState>(FeedScreenState()) {
-    fun fetchPosts() {
+    fun fetchPosts(query: String = "") {
         viewModelScope.launch {
-            val postsWithAuthor = getPostsWithAuthorUseCase.invoke().map { it.toUI() }
+            val postsWithAuthor =
+                getPostsWithAuthorUseCase.invoke(query).map { it.toUI() }
             mutableState.update {
                 it.copy(
                     postsWithAuthor = postsWithAuthor
                 )
             }
+        }
+    }
+
+    fun onQueryValueChange(newValue: String) {
+        mutableState.update {
+            it.copy(query = newValue)
         }
     }
 }

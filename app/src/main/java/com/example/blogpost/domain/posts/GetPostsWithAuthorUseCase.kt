@@ -13,14 +13,15 @@ class GetPostsWithAuthorUseCase(
     private val postsRepository: PostsRepository,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) {
-    suspend operator fun invoke(): List<PostWithAuthor> = withContext(coroutineContext) {
-        val postsWithAuthor = mutableListOf<PostWithAuthor>()
-        postsRepository.getPosts().collectLatest {
-            it.forEach { post ->
-                val author = usersRepository.getUserById(post.authorId).first()
-                postsWithAuthor.add(PostWithAuthor(post, author))
+    suspend operator fun invoke(query: String = ""): List<PostWithAuthor> =
+        withContext(coroutineContext) {
+            val postsWithAuthor = mutableListOf<PostWithAuthor>()
+            postsRepository.getPosts(query).collectLatest {
+                it.forEach { post ->
+                    val author = usersRepository.getUserById(post.authorId).first()
+                    postsWithAuthor.add(PostWithAuthor(post, author))
+                }
             }
+            postsWithAuthor
         }
-        postsWithAuthor
-    }
 }
