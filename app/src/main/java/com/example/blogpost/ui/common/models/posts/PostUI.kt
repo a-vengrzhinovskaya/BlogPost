@@ -1,4 +1,4 @@
-package com.example.blogpost.ui.common.models.post
+package com.example.blogpost.ui.common.models.posts
 
 data class PostUI(
     val id: String = "",

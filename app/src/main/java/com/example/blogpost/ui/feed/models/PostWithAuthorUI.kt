@@ -1,7 +1,7 @@
 package com.example.blogpost.ui.feed.models
 
-import com.example.blogpost.ui.common.models.post.PostUI
-import com.example.blogpost.ui.common.models.user.UserUI
+import com.example.blogpost.ui.common.models.posts.PostUI
+import com.example.blogpost.ui.common.models.users.UserUI
 
 data class PostWithAuthorUI(
     val post: PostUI,

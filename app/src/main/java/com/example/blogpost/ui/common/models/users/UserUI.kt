@@ -1,4 +1,4 @@
-package com.example.blogpost.ui.common.models.user
+package com.example.blogpost.ui.common.models.users
 
 data class UserUI(
     val name: String = "",

@@ -19,6 +19,7 @@ data class CommentsResponse(
             val author: List<String>,
             val body: String,
             val id: Int,
+            val date: String,
             val post: List<String>
         )
     }

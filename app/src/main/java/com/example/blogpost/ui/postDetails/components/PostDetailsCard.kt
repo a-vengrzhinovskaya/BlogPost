@@ -7,35 +7,43 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import com.example.blogpost.R
+import com.example.blogpost.ui.common.components.FeedbackItem
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryCard
-import com.example.blogpost.ui.common.models.post.PostUI
-import com.example.blogpost.ui.feed.components.FeedbackItem
+import com.example.blogpost.ui.common.components.SmallSpacer
+import com.example.blogpost.ui.common.models.posts.PostUI
 import com.example.blogpost.ui.theme.mediumDp
 
 @Composable
 fun PostDetailsCard(
     post: PostUI,
-    onLikeClick: () -> Unit
+    onLikeClick: () -> Unit,
+    onCommentClick: () -> Unit
 ) {
+    var isPostLiked by remember { mutableStateOf(post.isLiked) }
+    var likeButtonTint by remember { mutableStateOf(Color.LightGray) }
+
     PrimaryCard {
         Text(text = post.title)
 
         MediumSpacer()
-
         Text(text = post.body)
 
         MediumSpacer()
-
         SubcomposeAsyncImage(
             modifier = Modifier
                 .size(200.dp)
@@ -48,25 +56,34 @@ fun PostDetailsCard(
         )
 
         MediumSpacer()
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row {
-                FeedbackItem(
-                    iconId = R.drawable.ic_like_filled,
-                    count = post.likesCount
-                )
+            FeedbackItem(
+                modifier = Modifier.size(24.dp),
+                tint = likeButtonTint,
+                iconId = R.drawable.ic_like_filled,
+                count = post.likesCount,
+                onClick = {
+                    onLikeClick()
+                    isPostLiked = !isPostLiked
+                    if (isPostLiked) {
+                        likeButtonTint = Color.Gray
+                    } else {
+                        likeButtonTint = Color.LightGray
+                    }
+                }
+            )
 
-                MediumSpacer()
-
-                FeedbackItem(
-                    iconId = R.drawable.ic_comments_filled,
-                    count = post.commentsCount
-                )
-            }
+            SmallSpacer()
+            FeedbackItem(
+                modifier = Modifier.size(24.dp),
+                iconId = R.drawable.ic_comments_filled,
+                count = post.commentsCount,
+                onClick = onCommentClick
+            )
         }
     }
 }

@@ -26,5 +26,5 @@ interface BlogPostAPI {
     suspend fun getAllComments(): CommentsResponse //TODO: не нужно?
 
     @GET("Comments/{id}")
-    suspend fun getCommentById(@Path("id") id: String): CommentsResponse
+    suspend fun getCommentById(@Path("id") id: String): CommentsResponse.Record
 }

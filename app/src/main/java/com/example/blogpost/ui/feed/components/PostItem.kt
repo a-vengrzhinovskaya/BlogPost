@@ -18,11 +18,12 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import com.example.blogpost.R
+import com.example.blogpost.ui.common.components.FeedbackItem
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryCard
 import com.example.blogpost.ui.common.components.SmallSpacer
-import com.example.blogpost.ui.common.models.post.PostUI
-import com.example.blogpost.ui.common.models.user.UserUI
+import com.example.blogpost.ui.common.models.posts.PostUI
+import com.example.blogpost.ui.common.models.users.UserUI
 import com.example.blogpost.ui.theme.mediumDp
 
 @Composable
@@ -50,22 +51,16 @@ fun PostItem(
             )
 
             SmallSpacer()
-
             Text(text = author.name)
-
             Spacer(modifier = Modifier.weight(1f))
-
             Text(text = post.date)
         }
 
         MediumSpacer()
-
         Text(text = post.title)
 
         SmallSpacer()
-
         MediumSpacer()
-
         SubcomposeAsyncImage(
             modifier = Modifier
                 .size(200.dp)
@@ -78,20 +73,20 @@ fun PostItem(
         )
 
         MediumSpacer()
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 FeedbackItem(
+                    modifier = Modifier.size(24.dp),
                     iconId = R.drawable.ic_like_filled,
                     count = post.likesCount
                 )
 
                 MediumSpacer()
-
                 FeedbackItem(
+                    modifier = Modifier.size(24.dp),
                     iconId = R.drawable.ic_comments_filled,
                     count = post.commentsCount
                 )
