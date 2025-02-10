@@ -18,12 +18,42 @@ class PostDetailsViewModel(
         viewModelScope.launch {
             postsRepository.getPostById(postId).collectLatest { post ->
                 val commentsWithAuthor = getCommentsWithAuthorByPostIdUseCase.invoke(post.id)
-                mutableState.update {
-                    it.copy(
+                mutableState.update { postDetailsScreenState ->
+                    postDetailsScreenState.copy(
                         post = post.toUI(),
                         commentsWithAuthor = commentsWithAuthor.map { it.toUI() }
                     )
                 }
+            }
+        }
+    }
+
+    fun onPostLike() {
+        mutableState.update {
+            val isCurrentlyLiked = !it.isLiked
+            it.copy(
+                isLiked = isCurrentlyLiked,
+                post = it.post.copy(
+                    likesCount = if (isCurrentlyLiked) {
+                        it.post.likesCount + 1
+                    } else {
+                        it.post.likesCount - 1
+                    }
+                )
+            )
+        }
+    }
+
+    fun onActiveUserCommentChange(newValue: String) {
+        mutableState.update {
+            it.copy(activeUserComment = newValue)
+        }
+    }
+
+    fun sendComment() {
+        viewModelScope.launch {
+            mutableState.update {
+                it.copy(activeUserComment = "")
             }
         }
     }
