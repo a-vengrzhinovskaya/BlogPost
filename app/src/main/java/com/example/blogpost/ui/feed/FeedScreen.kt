@@ -56,7 +56,7 @@ private fun FeedScreenBody(
     state: FeedScreenState,
     onPostClick: (String) -> Unit
 ) {
-    val tabLabels by remember { mutableStateOf(listOf("Все", "Мои")) } // TODO: string recource 
+    val tabLabels by remember { mutableStateOf(listOf("Все", "Мои")) } // TODO: string resource 
 
     Column(
         modifier = Modifier

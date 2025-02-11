@@ -34,7 +34,14 @@ class UsersRepositoryImpl(
     }.flowOn(coroutineContext)
 
     override fun login(email: String, password: String): Flow<Unit> = flow<Unit> {
-        sharedPreferences.edit().putString(BLOGPOST_USER_ID, email).apply()
+        val allUsers = getUsers().last()
+        allUsers.firstOrNull { it.email == email && it.password == password }.let {
+            if (it != null) {
+                sharedPreferences.edit().putString(BLOGPOST_USER_ID, email).apply()
+            } else {
+                throw Exception("User not found")
+            }
+        }
     }.flowOn(coroutineContext)
 
     override fun register(email: String, password: String): Flow<User> {

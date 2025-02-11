@@ -58,7 +58,12 @@ class AuthScreen : Screen {
                         viewModel::onPasswordFieldValueChange
                     },
                     onRegisterClick = {},
-                    onLoginClick = remember { { navigator.push(FeedScreen()) } },
+                    onLoginClick = remember {
+                        {
+                            viewModel.login()
+                            navigator.push(FeedScreen())
+                        }
+                    },
                     paddingValues = paddingValues
                 )
             }
