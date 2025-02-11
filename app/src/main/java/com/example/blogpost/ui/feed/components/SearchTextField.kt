@@ -3,7 +3,6 @@ package com.example.blogpost.ui.feed.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ fun SearchTextField(
     labelText: String,
     onValueChange: (String) -> Unit,
     leadingIconId: Int,
-    onLeadingIconClick: () -> Unit
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -29,13 +27,11 @@ fun SearchTextField(
         onValueChange = onValueChange,
         singleLine = true,
         label = { Text(text = labelText) },
-        leadingIcon = {
-            IconButton(onClick = onLeadingIconClick) {
-                Icon(
-                    painter = painterResource(id = leadingIconId),
-                    contentDescription = null
-                )
-            }
+        leadingIcon = { // TODO: Modifier.size
+            Icon(
+                painter = painterResource(id = leadingIconId),
+                contentDescription = null
+            )
         }
     )
 }

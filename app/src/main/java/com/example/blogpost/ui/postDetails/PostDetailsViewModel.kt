@@ -44,16 +44,16 @@ class PostDetailsViewModel(
         }
     }
 
-    fun onActiveUserCommentChange(newValue: String) {
+    fun onCurrentUserCommentChange(newValue: String) {
         mutableState.update {
-            it.copy(activeUserComment = newValue)
+            it.copy(currentUserComment = newValue)
         }
     }
 
     fun sendComment() {
         viewModelScope.launch {
             mutableState.update {
-                it.copy(activeUserComment = "")
+                it.copy(currentUserComment = "")
             }
         }
     }

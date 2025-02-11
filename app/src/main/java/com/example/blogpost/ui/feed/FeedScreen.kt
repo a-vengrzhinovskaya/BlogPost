@@ -37,7 +37,6 @@ class FeedScreen : Screen {
                 FeedTopBar(
                     query = state.query,
                     onQueryValueChange = remember { viewModel::onQueryValueChange },
-                    onSearchClick = remember { { viewModel.fetchPosts(query = state.query) } }
                 )
             },
             content = { paddingValues ->
@@ -57,7 +56,7 @@ private fun FeedScreenBody(
     state: FeedScreenState,
     onPostClick: (String) -> Unit
 ) {
-    val tabLabels by remember { mutableStateOf(listOf("Все", "Мои")) }
+    val tabLabels by remember { mutableStateOf(listOf("Все", "Мои")) } // TODO: string recource 
 
     Column(
         modifier = Modifier
@@ -69,8 +68,13 @@ private fun FeedScreenBody(
             modifier = Modifier.fillMaxWidth(),
             tabLabels = tabLabels,
             allPosts = state.postsWithAuthor,
-            myPosts = state.postsWithAuthor.shuffled().take(3),
-            onPostClick = onPostClick
+            myPosts = state.currentUserPosts,
+            onPostClick = onPostClick,
+            currentUserPostsNotFoundMessage = if (state.isAuthorized) {
+                "Вы еще не создавали посты"
+            } else {
+                "Авторизуйтесь, чтобы просматривать свои посты"
+            }
         )
     }
 }

@@ -2,21 +2,39 @@ package com.example.blogpost.ui.feed
 
 import androidx.lifecycle.viewModelScope
 import com.example.blogpost.domain.posts.GetPostsWithAuthorUseCase
+import com.example.blogpost.domain.users.GetCurrentUserPostsUseCase
+import com.example.blogpost.domain.users.UsersRepository
 import com.example.blogpost.ui.common.StateViewModel
 import com.example.blogpost.ui.feed.models.toUI
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FeedViewModel(
-    private val getPostsWithAuthorUseCase: GetPostsWithAuthorUseCase
+    private val usersRepository: UsersRepository,
+    private val getCurrentUserPostsUseCase: GetCurrentUserPostsUseCase,
+    private val getPostsWithAuthorUseCase: GetPostsWithAuthorUseCase,
 ) : StateViewModel<FeedScreenState>(FeedScreenState()) {
+    init {
+        viewModelScope.launch {
+            usersRepository.getCurrentUser().last().let { currentUser ->
+                mutableState.update {
+                    it.copy(
+                        isAuthorized = currentUser != null
+                    )
+                }
+            }
+        }
+    }
+
     fun fetchPosts(query: String = "") {
         viewModelScope.launch {
-            val postsWithAuthor =
-                getPostsWithAuthorUseCase.invoke(query).map { it.toUI() }
-            mutableState.update {
-                it.copy(
-                    postsWithAuthor = postsWithAuthor
+            val postsWithAuthor = getPostsWithAuthorUseCase.invoke(query)
+            val currentUserPosts = getCurrentUserPostsUseCase.invoke()
+            mutableState.update { feedScreenState ->
+                feedScreenState.copy(
+                    postsWithAuthor = postsWithAuthor.map { it.toUI() },
+                    currentUserPosts = currentUserPosts.map { it.toUI() }
                 )
             }
         }
@@ -26,5 +44,6 @@ class FeedViewModel(
         mutableState.update {
             it.copy(query = newValue)
         }
+        fetchPosts(state.value.query)
     }
 }

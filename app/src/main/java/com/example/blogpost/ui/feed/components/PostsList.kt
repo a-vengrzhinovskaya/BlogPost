@@ -10,13 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import com.example.blogpost.ui.feed.models.PostWithAuthorUI
 import com.example.blogpost.ui.theme.extraLargeDp
 
 @Composable
 fun PostsList(
     posts: List<PostWithAuthorUI>,
-    onPostClick: (String) -> Unit
+    onPostClick: (String) -> Unit,
+    notFoundMessage: String = "Ничего не нашлось" //stringResource(R.string.app_name)
 ) {
     if (posts.isEmpty()) {
         Column(
@@ -25,7 +27,8 @@ fun PostsList(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Ничего не нашлось"
+                text = notFoundMessage,
+                textAlign = TextAlign.Center
             )
         }
     } else {

@@ -11,8 +11,7 @@ import com.example.blogpost.ui.theme.extraLargeDp
 @Composable
 fun FeedTopBar(
     query: String,
-    onQueryValueChange: (String) -> Unit,
-    onSearchClick: () -> Unit
+    onQueryValueChange: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -24,8 +23,7 @@ fun FeedTopBar(
             value = query,
             labelText = "Поиск",
             onValueChange = onQueryValueChange,
-            leadingIconId = R.drawable.ic_search,
-            onLeadingIconClick = onSearchClick
+            leadingIconId = R.drawable.ic_search
         )
     }
 }

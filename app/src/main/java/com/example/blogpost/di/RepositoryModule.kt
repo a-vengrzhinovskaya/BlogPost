@@ -9,7 +9,7 @@ import com.example.blogpost.domain.users.UsersRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single<UsersRepository> { UsersRepositoryImpl(get()) }
+    single<UsersRepository> { UsersRepositoryImpl(get(), get()) }
     single<PostsRepository> { PostsRepositoryImpl(get()) }
     single<CommentsRepository> { CommentsRepositoryImpl(get()) }
 }

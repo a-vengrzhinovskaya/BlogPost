@@ -16,9 +16,10 @@ data class UsersResponse(
     ) {
         @Serializable
         data class UserResponse(
+            val email: String,
+            val password: String,
             val avatarUrl: String,
             val comments: List<String>? = null,
-            val id: Int,
             val name: String,
             val posts: List<String>? = null,
             val postsLiked: List<String>? = null

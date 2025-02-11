@@ -3,6 +3,7 @@ package com.example.blogpost
 import android.app.Application
 import com.example.blogpost.di.networkModule
 import com.example.blogpost.di.repositoryModule
+import com.example.blogpost.di.sharedPreferencesModule
 import com.example.blogpost.di.useCaseModule
 import com.example.blogpost.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -18,7 +19,8 @@ class App : Application() {
                 networkModule,
                 repositoryModule,
                 useCaseModule,
-                viewModelModule
+                viewModelModule,
+                sharedPreferencesModule
             )
         }
     }

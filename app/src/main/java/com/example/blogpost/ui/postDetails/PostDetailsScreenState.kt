@@ -7,5 +7,5 @@ data class PostDetailsScreenState(
     val post: PostUI = PostUI(),
     val isLiked: Boolean = false,
     val commentsWithAuthor: List<CommentWithAuthorUI> = emptyList(),
-    val activeUserComment: String = ""
+    val currentUserComment: String = ""
 )

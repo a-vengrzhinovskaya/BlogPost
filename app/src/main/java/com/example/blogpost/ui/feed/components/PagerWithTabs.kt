@@ -25,7 +25,8 @@ fun PagerWithTabs(
     tabLabels: List<String>,
     allPosts: List<PostWithAuthorUI>,
     myPosts: List<PostWithAuthorUI>,
-    onPostClick: (String) -> Unit
+    onPostClick: (String) -> Unit,
+    currentUserPostsNotFoundMessage: String
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState(pageCount = { tabLabels.size })
@@ -71,7 +72,8 @@ fun PagerWithTabs(
             1 -> {
                 PostsList(
                     posts = myPosts,
-                    onPostClick = onPostClick
+                    onPostClick = onPostClick,
+                    notFoundMessage = currentUserPostsNotFoundMessage
                 )
             }
         }
