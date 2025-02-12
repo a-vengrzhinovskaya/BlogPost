@@ -44,9 +44,9 @@ fun PasswordTextField(
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
             val icon = if (passwordVisible) {
-                R.drawable.ic_password_visibility_off
-            } else {
                 R.drawable.ic_password_visibility_on
+            } else {
+                R.drawable.ic_password_visibility_off
             }
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(painter = painterResource(id = icon), null)

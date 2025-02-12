@@ -60,8 +60,7 @@ class AuthScreen : Screen {
                     onRegisterClick = {},
                     onLoginClick = remember {
                         {
-                            viewModel.login()
-                            navigator.push(FeedScreen())
+                            viewModel.login { navigator.push(FeedScreen()) }
                         }
                     },
                     paddingValues = paddingValues

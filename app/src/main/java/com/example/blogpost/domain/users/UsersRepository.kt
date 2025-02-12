@@ -12,5 +12,7 @@ interface UsersRepository {
 
     fun register(email: String, password: String): Flow<User>
 
+    fun logOut(): Flow<Unit>
+
     fun getCurrentUser(): Flow<User?>
 }
