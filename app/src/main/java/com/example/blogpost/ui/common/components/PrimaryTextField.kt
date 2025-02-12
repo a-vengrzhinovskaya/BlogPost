@@ -24,6 +24,7 @@ fun PrimaryTextField(
         shape = RoundedCornerShape(mediumDp),
         value = value,
         onValueChange = onValueChange,
+        singleLine = true,
         label = { Text(text = labelText) }
     )
 }

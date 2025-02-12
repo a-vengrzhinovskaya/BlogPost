@@ -5,6 +5,10 @@ import com.example.blogpost.domain.users.models.User
 
 fun UsersResponse.Record.toDomain() = User(
     id = id,
+    email = user.email,
+    password = user.password,
     name = user.name,
-    avatarUrl = user.avatarUrl
+    avatarUrl = user.avatarUrl,
+    postsIds = user.posts ?: emptyList(),
+    postsLikedIds = user.postsLiked ?: emptyList()
 )

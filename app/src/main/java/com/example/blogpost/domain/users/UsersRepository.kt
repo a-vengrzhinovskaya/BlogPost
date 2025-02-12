@@ -7,4 +7,12 @@ interface UsersRepository {
     fun getUsers(): Flow<List<User>>
 
     fun getUserById(id: String): Flow<User>
+
+    fun login(email: String, password: String): Flow<Unit>
+
+    fun register(email: String, password: String): Flow<User>
+
+    fun logOut(): Flow<Unit>
+
+    fun getCurrentUser(): Flow<User?>
 }

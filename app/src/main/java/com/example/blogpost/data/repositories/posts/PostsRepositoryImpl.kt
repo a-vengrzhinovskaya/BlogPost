@@ -15,12 +15,12 @@ class PostsRepositoryImpl(
 ) : PostsRepository {
     private val postsCache = mutableListOf<Post>()
 
-    override fun getPosts(): Flow<List<Post>> = flow {
+    override fun getPosts(query: String): Flow<List<Post>> = flow {
         val posts = api.getAllPosts().records.map {
             it.toDomain()
         }
         cachePosts(posts)
-        emit(posts)
+        emit(posts.filter { it.title.contains(query, ignoreCase = true) })
     }.flowOn(coroutineContext)
 
     override fun getPostById(id: String): Flow<Post> = flow {

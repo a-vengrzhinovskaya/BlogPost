@@ -47,7 +47,7 @@ class PostDetailsScreen(private val postId: String) : Screen {
                     paddingValues = paddingValues,
                     state = state,
                     onLikeClick = remember { { viewModel.onPostLike() } },
-                    onCommentTextFieldValueChange = remember { viewModel::onActiveUserCommentChange },
+                    onCommentTextFieldValueChange = remember { viewModel::onCurrentUserCommentChange },
                     onSendClick = remember { { viewModel.sendComment() } }
                 )
             }
@@ -102,10 +102,10 @@ private fun PostDetailsBody(
 
                     SmallSpacer()
                     CommentTextField(
-                        value = state.activeUserComment,
+                        value = state.currentUserComment,
                         labelText = "Комментарий",
                         onValueChange = onCommentTextFieldValueChange,
-                        trailingIcon = R.drawable.ic_send,
+                        trailingIconId = R.drawable.ic_send,
                         onTrailingIconClick = onSendClick
                     )
                 }
