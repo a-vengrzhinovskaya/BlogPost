@@ -18,4 +18,12 @@ class PostEditorViewModel(
     fun onAttachedImageUrlValueChange(newValue: String) = mutableState.update {
         it.copy(attachedImageUrl = newValue)
     }
+
+    fun savePost() {
+
+    }
+
+    fun deletePost() {
+
+    }
 }

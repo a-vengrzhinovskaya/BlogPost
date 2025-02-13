@@ -7,4 +7,12 @@ interface PostsRepository {
     fun getPosts(query: String = ""): Flow<List<Post>>
 
     fun getPostById(id: String): Flow<Post>
+
+    fun createPost(
+        authorId: String,
+        date: String,
+        title: String,
+        body: String,
+        imageUrl: String
+    ): Flow<Post>
 }

@@ -11,11 +11,11 @@ data class CommentsResponse(
     @Serializable
     data class Record(
         @SerialName("fields")
-        val comment: CommentResponse,
-        val id: String
+        val comment: Comment,
+        val id: String = ""
     ) {
         @Serializable
-        data class CommentResponse(
+        data class Comment(
             val author: List<String>,
             val body: String,
             val date: String,

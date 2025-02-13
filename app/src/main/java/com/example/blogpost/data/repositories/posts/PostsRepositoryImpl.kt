@@ -1,6 +1,7 @@
 package com.example.blogpost.data.repositories.posts
 
 import com.example.blogpost.data.network.BlogPostAPI
+import com.example.blogpost.data.network.models.posts.PostsResponse
 import com.example.blogpost.domain.posts.PostsRepository
 import com.example.blogpost.domain.posts.models.Post
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +28,31 @@ class PostsRepositoryImpl(
         val post =
             postsCache.firstOrNull { it.id == id } ?: api.getPostById(id).toDomain()
         emit(post)
+    }.flowOn(coroutineContext)
+
+    override fun createPost(
+        authorId: String,
+        date: String,
+        title: String,
+        body: String,
+        imageUrl: String
+    ) = flow {
+        val post = api.createPost(
+            PostsResponse(
+                records = listOf(
+                    PostsResponse.Record(
+                        post = PostsResponse.Record.Post(
+                            authorId = listOf(authorId),
+                            date = date,
+                            title = title,
+                            body = body,
+                            imageUrl = imageUrl
+                        )
+                    )
+                )
+            )
+        )
+        emit(post.records.first().toDomain())
     }.flowOn(coroutineContext)
 
     private fun cachePosts(newPosts: List<Post>) = newPosts.forEach { newPost ->

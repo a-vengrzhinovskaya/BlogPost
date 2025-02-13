@@ -2,6 +2,7 @@ package com.example.blogpost.data.repositories.users
 
 import android.content.SharedPreferences
 import com.example.blogpost.data.network.BlogPostAPI
+import com.example.blogpost.data.network.models.users.UsersResponse
 import com.example.blogpost.domain.users.UsersRepository
 import com.example.blogpost.domain.users.models.User
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,29 @@ class UsersRepositoryImpl(
     override fun getUserById(id: String): Flow<User> = flow {
         val user = usersCache.firstOrNull { it.id == id } ?: api.getUserById(id).toDomain()
         emit(user)
+    }.flowOn(coroutineContext)
+
+    override fun createUser(
+        email: String,
+        password: String,
+        name: String,
+        avatarUrl: String
+    ) = flow {
+        val user = api.createUser(
+            UsersResponse(
+                records = listOf(
+                    UsersResponse.Record(
+                        user = UsersResponse.Record.User(
+                            email = email,
+                            password = password,
+                            name = name,
+                            avatarUrl = avatarUrl
+                        )
+                    )
+                )
+            )
+        )
+        emit(user.records.first().toDomain())
     }.flowOn(coroutineContext)
 
     override fun login(email: String, password: String) = flow {

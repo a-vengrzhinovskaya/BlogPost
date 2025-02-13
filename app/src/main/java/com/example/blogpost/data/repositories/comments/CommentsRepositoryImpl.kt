@@ -1,6 +1,7 @@
 package com.example.blogpost.data.repositories.comments
 
 import com.example.blogpost.data.network.BlogPostAPI
+import com.example.blogpost.data.network.models.comments.CommentsResponse
 import com.example.blogpost.domain.comments.CommentsRepository
 import com.example.blogpost.domain.comments.models.Comment
 import kotlinx.coroutines.Dispatchers
@@ -15,17 +16,33 @@ class CommentsRepositoryImpl(
 ) : CommentsRepository {
     private val commentsCache = mutableListOf<Comment>()
 
-    override fun getComments(): Flow<List<Comment>> = flow {
-        val comments = api.getAllComments().records.map {
-            it.toDomain()
-        }
-        cacheComments(comments)
-        emit(comments)
+    override fun getCommentById(id: String): Flow<Comment> = flow {
+        val comment = commentsCache.firstOrNull { it.id == id } ?: api.getCommentById(id)
+            .toDomain() // TODO: chache
+        emit(comment)
     }.flowOn(coroutineContext)
 
-    override fun getCommentById(id: String): Flow<Comment> = flow {
-        val comment = commentsCache.firstOrNull { it.id == id } ?: api.getCommentById(id).toDomain()
-        emit(comment)
+    override fun createComment(
+        postId: String,
+        authorId: String,
+        date: String,
+        body: String
+    ) = flow {
+        val comment = api.createComment(
+            CommentsResponse(
+                records = listOf(
+                    CommentsResponse.Record(
+                        comment = CommentsResponse.Record.Comment(
+                            post = listOf(postId),
+                            author = listOf(authorId),
+                            date = date,
+                            body = body
+                        )
+                    )
+                )
+            )
+        )
+        emit(comment.records.first().toDomain())
     }.flowOn(coroutineContext)
 
     private fun cacheComments(newComments: List<Comment>) = newComments.forEach { newComment ->

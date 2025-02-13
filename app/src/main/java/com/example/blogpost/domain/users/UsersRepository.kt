@@ -8,6 +8,13 @@ interface UsersRepository {
 
     fun getUserById(id: String): Flow<User>
 
+    fun createUser(
+        email: String,
+        password: String,
+        name: String,
+        avatarUrl: String
+    ): Flow<User>
+
     fun login(email: String, password: String): Flow<Unit>
 
     fun register(email: String, password: String): Flow<User>
