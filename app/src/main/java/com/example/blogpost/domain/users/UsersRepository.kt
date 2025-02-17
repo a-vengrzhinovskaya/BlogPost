@@ -21,5 +21,7 @@ interface UsersRepository {
 
     suspend fun logOut()
 
+    suspend fun deleteUser()
+
     fun getCurrentUser(): Flow<User?>
 }

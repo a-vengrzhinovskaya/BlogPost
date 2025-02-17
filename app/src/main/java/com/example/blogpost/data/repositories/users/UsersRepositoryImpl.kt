@@ -74,6 +74,10 @@ class UsersRepositoryImpl(
 
     override suspend fun logOut() = sharedPreferences.edit { remove(BLOGPOST_USER_ID) }
 
+    override suspend fun deleteUser() {
+        TODO("Not yet implemented")
+    }
+
     override fun getCurrentUser(): Flow<User?> = flow {
         getCurrentUserId().last().let {
             val user = if (it != null) getUserById(it).last() else null

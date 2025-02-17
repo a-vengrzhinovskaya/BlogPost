@@ -22,6 +22,7 @@ import com.example.blogpost.ui.feed.components.FeedTopBar
 import com.example.blogpost.ui.feed.components.PagerWithTabs
 import com.example.blogpost.ui.postDetails.PostDetailsScreen
 import com.example.blogpost.ui.postEditor.PostEditorScreen
+import com.example.blogpost.ui.settings.SettingsScreen
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,7 +56,7 @@ class FeedScreen : Screen {
                 FeedBottomBar(
                     onFeedButtonClick = remember { { navigator.push(FeedScreen()) } },
                     onAddButtonClick = remember { { navigator.push(PostEditorScreen()) } },
-                    onProfileButtonClick = remember { { navigator.push(PostEditorScreen()) } }
+                    onSettingsButtonClick = remember { { navigator.push(SettingsScreen()) } }
                 )
             }
         )
