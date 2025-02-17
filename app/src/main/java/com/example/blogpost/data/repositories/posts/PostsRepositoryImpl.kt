@@ -1,6 +1,7 @@
 package com.example.blogpost.data.repositories.posts
 
 import com.example.blogpost.data.network.BlogPostAPI
+import com.example.blogpost.data.network.models.posts.PostsResponse
 import com.example.blogpost.domain.posts.PostsRepository
 import com.example.blogpost.domain.posts.models.Post
 import kotlinx.coroutines.Dispatchers
@@ -16,9 +17,7 @@ class PostsRepositoryImpl(
     private val postsCache = mutableListOf<Post>()
 
     override fun getPosts(query: String): Flow<List<Post>> = flow {
-        val posts = api.getAllPosts().records.map {
-            it.toDomain()
-        }
+        val posts = api.getAllPosts().records.map { it.toDomain() }
         cachePosts(posts)
         emit(posts.filter { it.title.contains(query, ignoreCase = true) })
     }.flowOn(coroutineContext)
@@ -27,6 +26,31 @@ class PostsRepositoryImpl(
         val post =
             postsCache.firstOrNull { it.id == id } ?: api.getPostById(id).toDomain()
         emit(post)
+    }.flowOn(coroutineContext)
+
+    override fun createPost(
+        authorId: String,
+        date: String,
+        title: String,
+        body: String,
+        imageUrl: String
+    ) = flow {
+        val post = api.createPost(
+            PostsResponse(
+                records = listOf(
+                    PostsResponse.Record(
+                        post = PostsResponse.Record.Post(
+                            authorId = listOf(authorId),
+                            date = date,
+                            title = title,
+                            body = body,
+                            imageUrl = imageUrl
+                        )
+                    )
+                )
+            )
+        )
+        emit(post.records.first().toDomain())
     }.flowOn(coroutineContext)
 
     private fun cachePosts(newPosts: List<Post>) = newPosts.forEach { newPost ->

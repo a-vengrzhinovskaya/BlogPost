@@ -4,22 +4,22 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.blogpost.domain.users.UsersRepository
 import com.example.blogpost.ui.common.StateViewModel
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
     private val usersRepository: UsersRepository
 ) : StateViewModel<AuthScreenState>(AuthScreenState()) {
-    fun login(onLoginSuccess: () -> Unit) {
+    fun login() {
         viewModelScope.launch {
-            usersRepository.login(
-                state.value.email,
-                state.value.password
-            ).catch { throwable ->
-                Log.d("auth", throwable.message.toString())
-            }.collect {
-                onLoginSuccess()
+            try {
+                usersRepository.login(
+                    state.value.email,
+                    state.value.password
+                )
+                mutableState.update { it.copy(isAuthorizationSuccessful = true) }
+            } catch (e: Exception) {
+                Log.d("auth", e.message.toString())
             }
         }
     }

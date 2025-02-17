@@ -11,11 +11,11 @@ data class UsersResponse(
     @Serializable
     data class Record(
         @SerialName("fields")
-        val user: UserResponse,
-        val id: String
+        val user: User,
+        val id: String = ""
     ) {
         @Serializable
-        data class UserResponse(
+        data class User(
             val email: String,
             val password: String,
             val avatarUrl: String,

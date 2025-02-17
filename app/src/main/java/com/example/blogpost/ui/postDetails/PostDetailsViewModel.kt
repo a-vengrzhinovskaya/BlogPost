@@ -1,18 +1,22 @@
 package com.example.blogpost.ui.postDetails
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.blogpost.domain.comments.CreateCurrentUserCommentUseCase
 import com.example.blogpost.domain.comments.GetCommentsWithAuthorByPostIdUseCase
 import com.example.blogpost.domain.posts.PostsRepository
 import com.example.blogpost.ui.common.StateViewModel
 import com.example.blogpost.ui.common.models.posts.toUI
 import com.example.blogpost.ui.postDetails.models.toUI
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PostDetailsViewModel(
     private val postsRepository: PostsRepository,
-    private val getCommentsWithAuthorByPostIdUseCase: GetCommentsWithAuthorByPostIdUseCase
+    private val getCommentsWithAuthorByPostIdUseCase: GetCommentsWithAuthorByPostIdUseCase,
+    private val createCurrentUserCommentUseCase: CreateCurrentUserCommentUseCase
 ) : StateViewModel<PostDetailsScreenState>(PostDetailsScreenState()) {
     fun fetchPostDetails(postId: String) {
         viewModelScope.launch {
@@ -52,8 +56,16 @@ class PostDetailsViewModel(
 
     fun sendComment() {
         viewModelScope.launch {
-            mutableState.update {
-                it.copy(currentUserComment = "")
+            createCurrentUserCommentUseCase.invoke(
+                state.value.post.id,
+                state.value.currentUserComment
+            ).catch { throwable ->
+                Log.d("comment", throwable.message.toString())
+            }.collect {
+                mutableState.update {
+                    it.copy(currentUserComment = "")
+                }
+                fetchPostDetails(state.value.post.id)
             }
         }
     }

@@ -18,6 +18,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.blogpost.ui.feed.components.FeedTopBar
 import com.example.blogpost.ui.feed.components.PagerWithTabs
 import com.example.blogpost.ui.postDetails.PostDetailsScreen
+import com.example.blogpost.ui.postEditor.PostEditorScreen
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
@@ -37,13 +38,15 @@ class FeedScreen : Screen {
                 FeedTopBar(
                     query = state.query,
                     onQueryValueChange = remember { viewModel::onQueryValueChange },
+                    onAddButtonClick = remember { { navigator.push(PostEditorScreen()) } }
                 )
             },
             content = { paddingValues ->
                 FeedScreenBody(
                     paddingValues = paddingValues,
                     state = state,
-                    onPostClick = remember { { navigator.push(PostDetailsScreen(it)) } }
+                    onPostClick = remember { { navigator.push(PostDetailsScreen(it)) } },
+                    onFABClick = remember { { navigator.push(PostEditorScreen()) } }
                 )
             }
         )
@@ -54,7 +57,8 @@ class FeedScreen : Screen {
 private fun FeedScreenBody(
     paddingValues: PaddingValues,
     state: FeedScreenState,
-    onPostClick: (String) -> Unit
+    onPostClick: (String) -> Unit,
+    onFABClick: () -> Unit
 ) {
     val tabLabels by remember { mutableStateOf(listOf("Все", "Мои")) } // TODO: string resource 
 

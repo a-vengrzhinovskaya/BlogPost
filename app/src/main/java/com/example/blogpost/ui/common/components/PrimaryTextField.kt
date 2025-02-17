@@ -15,6 +15,7 @@ fun PrimaryTextField(
     modifier: Modifier = Modifier,
     value: String,
     labelText: String,
+    isSingleLine: Boolean = true,
     onValueChange: (String) -> Unit
 ) {
     OutlinedTextField(
@@ -24,7 +25,7 @@ fun PrimaryTextField(
         shape = RoundedCornerShape(mediumDp),
         value = value,
         onValueChange = onValueChange,
-        singleLine = true,
+        singleLine = isSingleLine,
         label = { Text(text = labelText) }
     )
 }
