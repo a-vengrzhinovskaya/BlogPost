@@ -14,7 +14,7 @@ class CreateCurrentUserCommentUseCase(
 ) {
     operator fun invoke(postId: String, body: String) = flow {
         val user = usersRepository.getCurrentUser().first()
-            ?: throw NullPointerException("Not authorized")
+            ?: error("Not authorized")
         commentsRepository.createComment(
             postId = postId,
             authorId = user.id,

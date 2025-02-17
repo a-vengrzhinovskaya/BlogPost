@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -40,6 +41,12 @@ class AuthScreen : Screen {
         val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
+        LaunchedEffect(state.isAuthorizationSuccessful) {
+            if (state.isAuthorizationSuccessful) {
+                navigator.push(FeedScreen())
+            }
+        }
+
         Scaffold(
             topBar = {
                 AuthTopBar(
@@ -59,9 +66,7 @@ class AuthScreen : Screen {
                     },
                     onRegisterClick = {},
                     onLoginClick = remember {
-                        {
-                            viewModel.login { navigator.push(FeedScreen()) }
-                        }
+                        { viewModel.login() }
                     },
                     paddingValues = paddingValues
                 )

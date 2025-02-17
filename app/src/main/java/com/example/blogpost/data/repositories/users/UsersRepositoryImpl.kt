@@ -1,12 +1,14 @@
 package com.example.blogpost.data.repositories.users
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.example.blogpost.data.network.BlogPostAPI
 import com.example.blogpost.data.network.models.users.UsersResponse
 import com.example.blogpost.domain.users.UsersRepository
 import com.example.blogpost.domain.users.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.last
@@ -22,9 +24,7 @@ class UsersRepositoryImpl(
     private val usersCache = mutableListOf<User>()
 
     override fun getUsers(): Flow<List<User>> = flow {
-        val users = api.getAllUsers().records.map {
-            it.toDomain()
-        }
+        val users = api.getAllUsers().records.map { it.toDomain() }
         cacheUsers(users)
         emit(users)
     }.flowOn(coroutineContext)
@@ -57,30 +57,22 @@ class UsersRepositoryImpl(
         emit(user.records.first().toDomain())
     }.flowOn(coroutineContext)
 
-    override fun login(email: String, password: String) = flow {
-        val allUsers = getUsers().last()
-        allUsers.firstOrNull {
-            it.email.equals(
-                email,
-                ignoreCase = true
-            ) && it.password == password
-        }.let { user ->
-            if (user != null) { // TODO:  first check email then password
-                sharedPreferences.edit().putString(BLOGPOST_USER_ID, user.id).apply()
-            } else {
-                throw Exception("User not found")
-            }
-        }
-        emit(Unit)
-    }.flowOn(coroutineContext)
+    override suspend fun login(email: String, password: String) =
+        checkIfUserExists(email, password)
+            ?.let { sharedPreferences.edit { putString(BLOGPOST_USER_ID, it.id) } }
+            ?: error("User not found")
 
-    override fun register(email: String, password: String): Flow<User> {
-        TODO("Not yet implemented")
+    override suspend fun register(
+        email: String,
+        password: String,
+        name: String,
+        avatarUrl: String
+    ) {
+        checkIfUserExists(email, password)?.let { error("User already exists") }
+        createUser(email, password, name, avatarUrl)
     }
 
-    override fun logOut(): Flow<Unit> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun logOut() = sharedPreferences.edit { remove(BLOGPOST_USER_ID) }
 
     override fun getCurrentUser(): Flow<User?> = flow {
         getCurrentUserId().last().let {
@@ -88,6 +80,9 @@ class UsersRepositoryImpl(
             emit(user)
         }
     }.flowOn(coroutineContext)
+
+    private suspend fun checkIfUserExists(email: String, password: String) = getUsers().first()
+        .firstOrNull { it.email.lowercase() == email.lowercase() && it.password == password }
 
     private fun getCurrentUserId(): Flow<String?> = flow {
         val currentUserId = sharedPreferences.getString(BLOGPOST_USER_ID, null)

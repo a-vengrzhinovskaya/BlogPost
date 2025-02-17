@@ -15,11 +15,11 @@ interface UsersRepository {
         avatarUrl: String
     ): Flow<User>
 
-    fun login(email: String, password: String): Flow<Unit>
+    suspend fun login(email: String, password: String)
 
-    fun register(email: String, password: String): Flow<User>
+    suspend fun register(email: String, password: String, name: String, avatarUrl: String)
 
-    fun logOut(): Flow<Unit>
+    suspend fun logOut()
 
     fun getCurrentUser(): Flow<User?>
 }

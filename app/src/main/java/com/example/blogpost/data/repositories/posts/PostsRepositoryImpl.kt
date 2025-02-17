@@ -17,9 +17,7 @@ class PostsRepositoryImpl(
     private val postsCache = mutableListOf<Post>()
 
     override fun getPosts(query: String): Flow<List<Post>> = flow {
-        val posts = api.getAllPosts().records.map {
-            it.toDomain()
-        }
+        val posts = api.getAllPosts().records.map { it.toDomain() }
         cachePosts(posts)
         emit(posts.filter { it.title.contains(query, ignoreCase = true) })
     }.flowOn(coroutineContext)
