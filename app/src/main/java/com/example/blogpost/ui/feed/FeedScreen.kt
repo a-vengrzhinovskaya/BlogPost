@@ -2,6 +2,7 @@ package com.example.blogpost.ui.feed
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -12,9 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.example.blogpost.ui.feed.components.FeedBottomBar
 import com.example.blogpost.ui.feed.components.FeedTopBar
 import com.example.blogpost.ui.feed.components.PagerWithTabs
 import com.example.blogpost.ui.postDetails.PostDetailsScreen
@@ -34,19 +37,25 @@ class FeedScreen : Screen {
         }
 
         Scaffold(
+            contentWindowInsets = WindowInsets(0.dp),
             topBar = {
                 FeedTopBar(
                     query = state.query,
-                    onQueryValueChange = remember { viewModel::onQueryValueChange },
-                    onAddButtonClick = remember { { navigator.push(PostEditorScreen()) } }
+                    onQueryValueChange = remember { viewModel::onQueryValueChange }
                 )
             },
             content = { paddingValues ->
                 FeedScreenBody(
                     paddingValues = paddingValues,
                     state = state,
-                    onPostClick = remember { { navigator.push(PostDetailsScreen(it)) } },
-                    onFABClick = remember { { navigator.push(PostEditorScreen()) } }
+                    onPostClick = remember { { navigator.push(PostDetailsScreen(it)) } }
+                )
+            },
+            bottomBar = {
+                FeedBottomBar(
+                    onFeedButtonClick = remember { { navigator.push(FeedScreen()) } },
+                    onAddButtonClick = remember { { navigator.push(PostEditorScreen()) } },
+                    onProfileButtonClick = remember { { navigator.push(PostEditorScreen()) } }
                 )
             }
         )
@@ -58,7 +67,6 @@ private fun FeedScreenBody(
     paddingValues: PaddingValues,
     state: FeedScreenState,
     onPostClick: (String) -> Unit,
-    onFABClick: () -> Unit
 ) {
     val tabLabels by remember { mutableStateOf(listOf("Все", "Мои")) } // TODO: string resource 
 
