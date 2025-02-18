@@ -40,12 +40,10 @@ class FeedScreen : Screen {
 
         LaunchedEffect(Unit) {
             viewModel.fetchPosts(DEFAULT_QUERY)
-            viewModel.checkIfAuthorized()
+            viewModel.checkIfAuthorized() // TODO: remove / fix view model not cleared
         }
 
-        LaunchedEffect(state.query) {
-            viewModel.fetchPosts(state.query)
-        }
+        LaunchedEffect(state.query) { viewModel.fetchPosts(state.query) } // TODO: make cooldown
 
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),

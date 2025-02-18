@@ -26,9 +26,10 @@ import com.example.blogpost.ui.auth.AuthScreen
 import com.example.blogpost.ui.common.components.LargeSpacer
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryButton
+import com.example.blogpost.ui.common.components.PrimaryTopBar
 import com.example.blogpost.ui.feed.FeedScreen
+import com.example.blogpost.ui.profile.ProfileScreen
 import com.example.blogpost.ui.settings.components.SettingsItem
-import com.example.blogpost.ui.settings.components.SettingsTopBar
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,7 +42,7 @@ class SettingsScreen : Screen {
 
         LaunchedEffect(Unit) {
             viewModel.fetchSettings()
-            viewModel.checkIfAuthorized()
+            viewModel.checkIfAuthorized() // TODO: remove / fix view model not cleared
         }
 
         val wasAuthorized by remember { mutableStateOf(state.isAuthorized) }
@@ -52,20 +53,16 @@ class SettingsScreen : Screen {
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),
             topBar = {
-                SettingsTopBar(
-                    onBackClick = remember {
-                        {
-                            navigator.pop()
-                            navigator.push(AuthScreen())
-                        }
-                    }
+                PrimaryTopBar(
+                    text = "Настройки",
+                    onBackClick = remember { { navigator.push(AuthScreen()) } }
                 )
             },
             content = { paddingValues ->
                 SettingsScreenBody(
                     paddingValues = paddingValues,
                     state = state,
-                    onGoToProfileClick = remember { { navigator.push(FeedScreen()) } },
+                    onGoToProfileClick = remember { { navigator.push(ProfileScreen()) } },
                     onGoToNotificationSettingsClick = remember { { navigator.push(FeedScreen()) } },
                     onDeleteAccountClick = remember { { viewModel.deleteAccount() } },
                     onLogoutCLick = remember { { viewModel.logOut() } },

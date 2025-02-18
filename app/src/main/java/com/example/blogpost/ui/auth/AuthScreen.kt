@@ -41,10 +41,10 @@ class AuthScreen : Screen {
         val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
+        LaunchedEffect(Unit) { viewModel.checkIfAuthorized() } // TODO: remove / fix view model not cleared 
+
         LaunchedEffect(state.isAuthorizationSuccessful) {
-            if (state.isAuthorizationSuccessful) {
-                navigator.push(FeedScreen())
-            }
+            if (state.isAuthorizationSuccessful) navigator.push(FeedScreen())
         }
 
         Scaffold(
