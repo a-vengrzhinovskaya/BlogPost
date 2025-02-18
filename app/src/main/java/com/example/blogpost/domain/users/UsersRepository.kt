@@ -23,5 +23,7 @@ interface UsersRepository {
 
     suspend fun deleteUser()
 
-    fun getCurrentUser(): Flow<User?>
+    suspend fun getCurrentUser(): User?
+
+    suspend fun isAuthorized(): Boolean
 }

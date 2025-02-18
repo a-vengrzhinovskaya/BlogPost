@@ -1,11 +1,11 @@
 package com.example.blogpost.ui.settings.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,7 +24,9 @@ fun SettingsItem(
     navigatesToScreen: Boolean = false,
     onSettingClick: () -> Unit
 ) {
-    PrimaryCard {
+    PrimaryCard(
+        modifier = Modifier.clickable { onSettingClick() }
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -42,13 +44,11 @@ fun SettingsItem(
             )
             if (navigatesToScreen) {
                 Spacer(Modifier.weight(1f))
-                IconButton(onSettingClick) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_chevron_right),
-                        tint = Color.Gray,
-                        contentDescription = null
-                    )
-                }
+                Icon(
+                    painter = painterResource(R.drawable.ic_chevron_right),
+                    tint = Color.Gray,
+                    contentDescription = null
+                )
             }
         }
     }

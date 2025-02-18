@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.last
 import kotlin.coroutines.CoroutineContext
 
 private const val BLOGPOST_USER_ID = "blog_post_user_id"
@@ -75,15 +74,13 @@ class UsersRepositoryImpl(
     override suspend fun logOut() = sharedPreferences.edit { remove(BLOGPOST_USER_ID) }
 
     override suspend fun deleteUser() {
-        TODO("Not yet implemented")
+        logOut() // TODO:  Delete user
     }
 
-    override fun getCurrentUser(): Flow<User?> = flow {
-        getCurrentUserId().last().let {
-            val user = if (it != null) getUserById(it).last() else null
-            emit(user)
-        }
-    }.flowOn(coroutineContext)
+    override suspend fun getCurrentUser(): User? =
+        getCurrentUserId().first()?.let { getUserById(it).first() }
+
+    override suspend fun isAuthorized(): Boolean = getCurrentUser() != null
 
     private suspend fun checkIfUserExists(email: String, password: String) = getUsers().first()
         .firstOrNull { it.email.lowercase() == email.lowercase() && it.password == password }

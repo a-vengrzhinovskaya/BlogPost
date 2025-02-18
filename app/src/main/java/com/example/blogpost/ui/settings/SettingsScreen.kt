@@ -24,57 +24,51 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.blogpost.ui.auth.AuthScreen
 import com.example.blogpost.ui.common.components.LargeSpacer
+import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryButton
 import com.example.blogpost.ui.feed.FeedScreen
 import com.example.blogpost.ui.settings.components.SettingsItem
+import com.example.blogpost.ui.settings.components.SettingsTopBar
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
 class SettingsScreen : Screen {
     @Composable
     override fun Content() {
-        val viewModel = koinViewModel<SettingsScreenViewModel>()
+        val viewModel = koinViewModel<SettingsViewModel>()
         val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
-        val settingsOnClickActions by remember {
-            mutableStateOf(
-                listOf<() -> Unit>(
-                    { navigator.push(FeedScreen()) },
-                    { navigator.push(FeedScreen()) },
-                    { viewModel.deleteAccount() },
-                    { viewModel.logOut() }
-                )
-            )
+        LaunchedEffect(Unit) {
+            viewModel.fetchSettings()
+            viewModel.checkIfAuthorized()
         }
 
-        val settingsWithAction by remember {
-            mutableStateOf(
-                state.profileSettings.map {
-                    Pair(it) {}
-                }
-            )
-        }
-
-        LaunchedEffect(state.profileSettings) {
-            settingsWithAction.mapIndexed() { index, it ->
-                it.copy(first = it.first, second = settingsOnClickActions[index])
-            }
-        }
-
+        val wasAuthorized by remember { mutableStateOf(state.isAuthorized) }
         LaunchedEffect(state.isAuthorized) {
-            if (state.isAuthorized) {
-                viewModel.fetchSettings()
-            }
+            if (wasAuthorized != state.isAuthorized && !state.isAuthorized) navigator.pop()
         }
 
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),
+            topBar = {
+                SettingsTopBar(
+                    onBackClick = remember {
+                        {
+                            navigator.pop()
+                            navigator.push(AuthScreen())
+                        }
+                    }
+                )
+            },
             content = { paddingValues ->
                 SettingsScreenBody(
                     paddingValues = paddingValues,
-                    isAuthorized = state.isAuthorized,
-                    settingsWithActions = settingsWithAction,
+                    state = state,
+                    onGoToProfileClick = remember { { navigator.push(FeedScreen()) } },
+                    onGoToNotificationSettingsClick = remember { { navigator.push(FeedScreen()) } },
+                    onDeleteAccountClick = remember { { viewModel.deleteAccount() } },
+                    onLogoutCLick = remember { { viewModel.logOut() } },
                     onLoginClick = remember { { navigator.push(AuthScreen()) } }
                 )
             }
@@ -85,8 +79,11 @@ class SettingsScreen : Screen {
 @Composable
 private fun SettingsScreenBody(
     paddingValues: PaddingValues,
-    isAuthorized: Boolean,
-    settingsWithActions: List<Pair<SettingScreenState.ProfileSetting, () -> Unit>>,
+    state: SettingsScreenState,
+    onGoToProfileClick: () -> Unit,
+    onGoToNotificationSettingsClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit,
+    onLogoutCLick: () -> Unit,
     onLoginClick: () -> Unit
 ) {
     Column(
@@ -97,13 +94,34 @@ private fun SettingsScreenBody(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (isAuthorized) {
-            settingsWithActions.forEach {
+        if (state.isAuthorized) {
+            with(state) {
                 SettingsItem(
-                    settingName = it.first.settingName,
-                    settingIconId = it.first.settingIconId,
-                    navigatesToScreen = it.first.navigatesToScreen,
-                    onSettingClick = it.second
+                    settingName = profileSettings.first().settingName,
+                    settingIconId = profileSettings.first().settingIconId,
+                    navigatesToScreen = profileSettings.first().navigatesToScreen,
+                    onSettingClick = onGoToProfileClick
+                )
+                MediumSpacer()
+                SettingsItem(
+                    settingName = profileSettings[1].settingName,
+                    settingIconId = profileSettings[1].settingIconId,
+                    navigatesToScreen = profileSettings[1].navigatesToScreen,
+                    onSettingClick = onGoToNotificationSettingsClick
+                )
+                MediumSpacer()
+                SettingsItem(
+                    settingName = profileSettings[2].settingName,
+                    settingIconId = profileSettings[2].settingIconId,
+                    navigatesToScreen = profileSettings[2].navigatesToScreen,
+                    onSettingClick = onDeleteAccountClick
+                )
+                MediumSpacer()
+                SettingsItem(
+                    settingName = profileSettings[3].settingName,
+                    settingIconId = profileSettings[3].settingIconId,
+                    navigatesToScreen = profileSettings[3].navigatesToScreen,
+                    onSettingClick = onLogoutCLick
                 )
             }
         } else {
