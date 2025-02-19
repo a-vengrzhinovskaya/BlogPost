@@ -40,14 +40,13 @@ class SettingsScreen : Screen {
         val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
-        LaunchedEffect(Unit) {
-            viewModel.fetchSettings()
-            viewModel.checkIfAuthorized() // TODO: remove / fix view model not cleared
-        }
+        LaunchedEffect(Unit) { viewModel.fetchSettings() }
 
         val wasAuthorized by remember { mutableStateOf(state.isAuthorized) }
         LaunchedEffect(state.isAuthorized) {
-            if (wasAuthorized != state.isAuthorized && !state.isAuthorized) navigator.pop()
+            if (wasAuthorized != state.isAuthorized && !state.isAuthorized) {
+                navigator.replaceAll(AuthScreen())
+            }
         }
 
         Scaffold(
@@ -55,7 +54,7 @@ class SettingsScreen : Screen {
             topBar = {
                 PrimaryTopBar(
                     text = "Настройки",
-                    onBackClick = remember { { navigator.push(AuthScreen()) } }
+                    onBackClick = remember { { navigator.pop() } }
                 )
             },
             content = { paddingValues ->
@@ -66,7 +65,7 @@ class SettingsScreen : Screen {
                     onGoToNotificationSettingsClick = remember { { navigator.push(FeedScreen()) } },
                     onDeleteAccountClick = remember { { viewModel.deleteAccount() } },
                     onLogoutCLick = remember { { viewModel.logOut() } },
-                    onLoginClick = remember { { navigator.push(AuthScreen()) } }
+                    onLoginClick = remember { { navigator.replaceAll(AuthScreen()) } }
                 )
             }
         )

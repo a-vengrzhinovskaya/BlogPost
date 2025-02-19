@@ -14,6 +14,16 @@ class FeedViewModel(
     private val getCurrentUserPostsUseCase: GetCurrentUserPostsUseCase,
     private val getPostsWithAuthorUseCase: GetPostsWithAuthorUseCase,
 ) : StateViewModel<FeedScreenState>(FeedScreenState()) {
+    init {
+        viewModelScope.launch {
+            mutableState.update {
+                it.copy(
+                    isAuthorized = usersRepository.isAuthorized()
+                )
+            }
+        }
+    }
+
     fun fetchPosts(query: String) {
         viewModelScope.launch {
             val postsWithAuthor = getPostsWithAuthorUseCase.invoke(query)
@@ -27,18 +37,11 @@ class FeedViewModel(
         }
     }
 
-    fun checkIfAuthorized() = viewModelScope.launch {
-        mutableState.update {
-            it.copy(
-                isAuthorized = usersRepository.isAuthorized()
-            )
-        }
-    }
-
     fun onQueryValueChange(newValue: String) {
-        mutableState.update {
-            it.copy(query = newValue)
-        }
+        if (newValue.length > state.value.query.length || newValue.length < state.value.query.length)
+            mutableState.update {
+                it.copy(query = newValue)
+            }
         fetchPosts(state.value.query)
     }
 }

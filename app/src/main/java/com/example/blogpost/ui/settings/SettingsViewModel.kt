@@ -11,6 +11,16 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(
     private val usersRepository: UsersRepository
 ) : StateViewModel<SettingsScreenState>(SettingsScreenState()) {
+    init {
+        viewModelScope.launch {
+            mutableState.update {
+                it.copy(
+                    isAuthorized = usersRepository.isAuthorized()
+                )
+            }
+        }
+    }
+
     fun fetchSettings() = try {
         viewModelScope.launch {
             mutableState.update {
@@ -40,14 +50,6 @@ class SettingsViewModel(
         }
     } catch (e: Exception) {
         Log.d("settings", "Attempt to fetch settings: ${e.message.toString()}")
-    }
-
-    fun checkIfAuthorized() = viewModelScope.launch {
-        mutableState.update {
-            it.copy(
-                isAuthorized = usersRepository.isAuthorized()
-            )
-        }
     }
 
     fun logOut() = try {

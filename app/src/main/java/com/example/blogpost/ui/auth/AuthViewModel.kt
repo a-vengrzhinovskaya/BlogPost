@@ -29,12 +29,4 @@ class AuthViewModel(
 
     fun onPasswordFieldValueChange(newValue: String) =
         mutableState.update { it.copy(password = newValue) }
-
-    fun checkIfAuthorized() = viewModelScope.launch {
-        mutableState.update {
-            it.copy(
-                isAuthorizationSuccessful = usersRepository.isAuthorized()
-            )
-        }
-    } // TODO:  Auth, Settings, Feed - DRY
 }
