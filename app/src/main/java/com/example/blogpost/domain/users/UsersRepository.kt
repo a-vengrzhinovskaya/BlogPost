@@ -19,6 +19,8 @@ interface UsersRepository {
 
     suspend fun register(email: String, password: String, name: String, avatarUrl: String)
 
+    suspend fun updateProfile(name: String, email: String, avatarUrl: String)
+
     suspend fun logOut()
 
     suspend fun deleteUser()

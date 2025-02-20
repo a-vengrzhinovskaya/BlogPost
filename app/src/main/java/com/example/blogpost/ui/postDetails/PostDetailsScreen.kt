@@ -47,7 +47,7 @@ class PostDetailsScreen(private val postId: String) : Screen {
                     paddingValues = paddingValues,
                     state = state,
                     onLikeClick = remember { { viewModel.onPostLike() } },
-                    onCommentTextFieldValueChange = remember { viewModel::onCurrentUserCommentChange },
+                    onCommentValueChange = remember { viewModel::onCurrentUserCommentChange },
                     onSendClick = remember { { viewModel.sendComment() } }
                 )
             }
@@ -61,7 +61,7 @@ private fun PostDetailsBody(
     paddingValues: PaddingValues,
     state: PostDetailsScreenState,
     onLikeClick: () -> Unit,
-    onCommentTextFieldValueChange: (String) -> Unit,
+    onCommentValueChange: (String) -> Unit,
     onSendClick: () -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -104,7 +104,7 @@ private fun PostDetailsBody(
                     CommentTextField(
                         value = state.currentUserComment,
                         labelText = "Комментарий",
-                        onValueChange = onCommentTextFieldValueChange,
+                        onValueChange = onCommentValueChange,
                         trailingIconId = R.drawable.ic_send,
                         onTrailingIconClick = onSendClick
                     )

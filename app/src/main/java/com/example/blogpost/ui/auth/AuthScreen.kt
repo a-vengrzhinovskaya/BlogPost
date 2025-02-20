@@ -56,11 +56,11 @@ class AuthScreen : Screen {
             content = { paddingValues ->
                 AuthScreenBody(
                     state = state,
-                    onEmailFieldValueChange = remember {
-                        viewModel::onEmailFieldValueChange
+                    onEmailValueChange = remember {
+                        viewModel::onEmailValueChange
                     },
-                    onPasswordFieldValueChange = remember {
-                        viewModel::onPasswordFieldValueChange
+                    onPasswordValueChange = remember {
+                        viewModel::onPasswordValueChange
                     },
                     onRegisterClick = {},
                     onLoginClick = remember {
@@ -76,8 +76,8 @@ class AuthScreen : Screen {
 @Composable
 private fun AuthScreenBody(
     state: AuthScreenState,
-    onEmailFieldValueChange: (String) -> Unit,
-    onPasswordFieldValueChange: (String) -> Unit,
+    onEmailValueChange: (String) -> Unit,
+    onPasswordValueChange: (String) -> Unit,
     onRegisterClick: () -> Unit,
     onLoginClick: () -> Unit,
     paddingValues: PaddingValues
@@ -100,7 +100,7 @@ private fun AuthScreenBody(
         PrimaryTextField(
             value = state.email,
             labelText = "Электронная почта",
-            onValueChange = onEmailFieldValueChange
+            onValueChange = onEmailValueChange
         )
 
         LargeSpacer()
@@ -108,7 +108,7 @@ private fun AuthScreenBody(
         PasswordTextField(
             value = state.password,
             labelText = "Пароль",
-            onValueChange = onPasswordFieldValueChange
+            onValueChange = onPasswordValueChange
         )
 
         LargeSpacer()
