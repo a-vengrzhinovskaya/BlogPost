@@ -42,9 +42,7 @@ class AuthScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(state.isAuthorizationSuccessful) {
-            if (state.isAuthorizationSuccessful) {
-                navigator.push(FeedScreen())
-            }
+            if (state.isAuthorizationSuccessful) navigator.replaceAll(FeedScreen())
         }
 
         Scaffold(
@@ -52,7 +50,7 @@ class AuthScreen : Screen {
                 AuthTopBar(
                     topBarText = "BlogPost",
                     topBarButtonText = "Продолжить без регистрации",
-                    onTopBarButtonClick = remember { { navigator.push(FeedScreen()) } }
+                    onTopBarButtonClick = remember { { navigator.replaceAll(FeedScreen()) } }
                 )
             },
             content = { paddingValues ->

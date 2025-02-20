@@ -22,54 +22,51 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.example.blogpost.R
 import com.example.blogpost.ui.auth.AuthScreen
 import com.example.blogpost.ui.common.components.LargeSpacer
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryButton
-import com.example.blogpost.ui.feed.FeedScreen
+import com.example.blogpost.ui.common.components.PrimaryTopBar
+import com.example.blogpost.ui.notificationSettings.NotificationSettingsScreen
+import com.example.blogpost.ui.profile.ProfileScreen
 import com.example.blogpost.ui.settings.components.SettingsItem
-import com.example.blogpost.ui.settings.components.SettingsTopBar
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
-class SettingsScreen : Screen {
+class SettingsMenuScreen : Screen {
     @Composable
     override fun Content() {
-        val viewModel = koinViewModel<SettingsViewModel>()
+        val viewModel = koinViewModel<SettingsMenuViewModel>()
         val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
-        LaunchedEffect(Unit) {
-            viewModel.fetchSettings()
-            viewModel.checkIfAuthorized()
-        }
+        LaunchedEffect(Unit) { viewModel.checkIfAuthorized() }
 
         val wasAuthorized by remember { mutableStateOf(state.isAuthorized) }
         LaunchedEffect(state.isAuthorized) {
-            if (wasAuthorized != state.isAuthorized && !state.isAuthorized) navigator.pop()
+            if (wasAuthorized != state.isAuthorized && !state.isAuthorized) navigator.replaceAll(
+                AuthScreen()
+            )
         }
 
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),
             topBar = {
-                SettingsTopBar(
-                    onBackClick = remember {
-                        {
-                            navigator.pop()
-                            navigator.push(AuthScreen())
-                        }
-                    }
+                PrimaryTopBar(
+                    text = "Настройки",
+                    onBackClick = remember { { navigator.pop() } }
                 )
             },
             content = { paddingValues ->
                 SettingsScreenBody(
                     paddingValues = paddingValues,
                     state = state,
-                    onGoToProfileClick = remember { { navigator.push(FeedScreen()) } },
-                    onGoToNotificationSettingsClick = remember { { navigator.push(FeedScreen()) } },
+                    onGoToProfileClick = remember { { navigator.push(ProfileScreen()) } },
+                    onGoToNotificationSettingsClick = remember { { navigator.push(NotificationSettingsScreen()) } },
                     onDeleteAccountClick = remember { { viewModel.deleteAccount() } },
                     onLogoutCLick = remember { { viewModel.logOut() } },
-                    onLoginClick = remember { { navigator.push(AuthScreen()) } }
+                    onLoginClick = remember { { navigator.replaceAll(AuthScreen()) } }
                 )
             }
         )
@@ -79,7 +76,7 @@ class SettingsScreen : Screen {
 @Composable
 private fun SettingsScreenBody(
     paddingValues: PaddingValues,
-    state: SettingsScreenState,
+    state: SettingsMenuScreenState,
     onGoToProfileClick: () -> Unit,
     onGoToNotificationSettingsClick: () -> Unit,
     onDeleteAccountClick: () -> Unit,
@@ -95,35 +92,31 @@ private fun SettingsScreenBody(
         verticalArrangement = Arrangement.Center
     ) {
         if (state.isAuthorized) {
-            with(state) {
-                SettingsItem(
-                    settingName = profileSettings.first().settingName,
-                    settingIconId = profileSettings.first().settingIconId,
-                    navigatesToScreen = profileSettings.first().navigatesToScreen,
-                    onSettingClick = onGoToProfileClick
-                )
-                MediumSpacer()
-                SettingsItem(
-                    settingName = profileSettings[1].settingName,
-                    settingIconId = profileSettings[1].settingIconId,
-                    navigatesToScreen = profileSettings[1].navigatesToScreen,
-                    onSettingClick = onGoToNotificationSettingsClick
-                )
-                MediumSpacer()
-                SettingsItem(
-                    settingName = profileSettings[2].settingName,
-                    settingIconId = profileSettings[2].settingIconId,
-                    navigatesToScreen = profileSettings[2].navigatesToScreen,
-                    onSettingClick = onDeleteAccountClick
-                )
-                MediumSpacer()
-                SettingsItem(
-                    settingName = profileSettings[3].settingName,
-                    settingIconId = profileSettings[3].settingIconId,
-                    navigatesToScreen = profileSettings[3].navigatesToScreen,
-                    onSettingClick = onLogoutCLick
-                )
-            }
+            SettingsItem(
+                settingName = "Профиль",
+                settingIconId = R.drawable.ic_user,
+                navigatesToScreen = true,
+                onSettingClick = onGoToProfileClick
+            )
+            MediumSpacer()
+            SettingsItem(
+                settingName = "Уведомления",
+                settingIconId = R.drawable.ic_notifications,
+                navigatesToScreen = true,
+                onSettingClick = onGoToNotificationSettingsClick
+            )
+            MediumSpacer()
+            SettingsItem(
+                settingName = "Удалить акканут",
+                settingIconId = R.drawable.ic_delete_account,
+                onSettingClick = onDeleteAccountClick
+            )
+            MediumSpacer()
+            SettingsItem(
+                settingName = "Выход",
+                settingIconId = R.drawable.ic_logout,
+                onSettingClick = onLogoutCLick
+            )
         } else {
             Text(
                 modifier = Modifier.fillMaxWidth(),

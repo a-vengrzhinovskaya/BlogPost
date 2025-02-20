@@ -24,7 +24,7 @@ import com.example.blogpost.ui.feed.components.FeedTopBar
 import com.example.blogpost.ui.feed.components.PagerWithTabs
 import com.example.blogpost.ui.postDetails.PostDetailsScreen
 import com.example.blogpost.ui.postEditor.PostEditorScreen
-import com.example.blogpost.ui.settings.SettingsScreen
+import com.example.blogpost.ui.settings.SettingsMenuScreen
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
@@ -40,12 +40,10 @@ class FeedScreen : Screen {
 
         LaunchedEffect(Unit) {
             viewModel.fetchPosts(DEFAULT_QUERY)
-            viewModel.checkIfAuthorized()
+            viewModel.checkIfAuthorized() // TODO: remove / fix view model not cleared
         }
 
-        LaunchedEffect(state.query) {
-            viewModel.fetchPosts(state.query)
-        }
+        LaunchedEffect(state.query) { viewModel.fetchPosts(state.query) } // TODO: make cooldown
 
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),
@@ -79,7 +77,7 @@ class FeedScreen : Screen {
                             }
                         }
                     },
-                    onSettingsButtonClick = remember { { navigator.push(SettingsScreen()) } }
+                    onSettingsButtonClick = remember { { navigator.push(SettingsMenuScreen()) } }
                 )
             }
         )

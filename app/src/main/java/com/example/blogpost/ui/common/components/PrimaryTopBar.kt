@@ -1,4 +1,4 @@
-package com.example.blogpost.ui.settings.components
+package com.example.blogpost.ui.common.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -19,7 +19,8 @@ import com.example.blogpost.R
 import com.example.blogpost.ui.theme.extraLargeDp
 
 @Composable
-fun SettingsTopBar(
+fun PrimaryTopBar(
+    text: String,
     onBackClick: () -> Unit
 ) {
     Row(
@@ -41,7 +42,7 @@ fun SettingsTopBar(
         }
         Text(
             modifier = Modifier.weight(1f),
-            text = "Настройки",
+            text = text,
             textAlign = TextAlign.Center
         )
     }
