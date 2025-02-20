@@ -24,8 +24,8 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import coil3.compose.SubcomposeAsyncImage
 import com.example.blogpost.ui.common.components.ExtraLargeSpacer
 import com.example.blogpost.ui.common.components.PrimaryTextField
-import com.example.blogpost.ui.common.components.PrimaryTopBar
 import com.example.blogpost.ui.common.components.SmallSpacer
+import com.example.blogpost.ui.profile.components.ProfileTopBar
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,15 +41,24 @@ class ProfileScreen : Screen {
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),
             topBar = {
-                PrimaryTopBar(
+                ProfileTopBar(
                     text = "Профиль",
-                    onBackClick = remember { { navigator.pop() } }
+                    onBackClick = remember { { navigator.pop() } },
+                    isEditMode = state.isEditMode,
+                    onEditButtonClick = remember {
+                        {
+                            if (state.isEditMode) viewModel.updateProfile()
+                            viewModel.switchMode()
+                        }
+                    }
                 )
             },
             content = { paddingValues ->
                 ProfileScreenBody(
                     paddingValues = paddingValues,
-                    state = state
+                    state = state,
+                    onNameValueChange = viewModel::onNameValueChange,
+                    onEmailValueChange = viewModel::onEmailValueChange
                 )
             }
         )
@@ -59,7 +68,9 @@ class ProfileScreen : Screen {
 @Composable
 private fun ProfileScreenBody(
     paddingValues: PaddingValues,
-    state: ProfileScreenState
+    state: ProfileScreenState,
+    onNameValueChange: (String) -> Unit,
+    onEmailValueChange: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -80,15 +91,15 @@ private fun ProfileScreenBody(
         PrimaryTextField(
             value = state.name,
             labelText = "Имя",
-            isEnabled = false,
-            onValueChange = {}
+            isEnabled = state.isEditMode,
+            onValueChange = onNameValueChange
         )
         SmallSpacer()
         PrimaryTextField(
             value = state.email,
             labelText = "Email",
-            isEnabled = false,
-            onValueChange = {}
+            isEnabled = state.isEditMode,
+            onValueChange = onEmailValueChange
         )
     }
 }

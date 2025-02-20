@@ -1,6 +1,7 @@
 package com.example.blogpost.data.repositories.users
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.example.blogpost.data.network.BlogPostAPI
 import com.example.blogpost.data.network.models.users.UsersResponse
@@ -69,6 +70,10 @@ class UsersRepositoryImpl(
     ) {
         checkIfUserExists(email, password)?.let { error("User already exists") }
         createUser(email, password, name, avatarUrl)
+    }
+
+    override suspend fun updateProfile(name: String, email: String, avatarUrl: String) {
+        Log.d("profile", "profile updated")
     }
 
     override suspend fun logOut() = sharedPreferences.edit { remove(BLOGPOST_USER_ID) }

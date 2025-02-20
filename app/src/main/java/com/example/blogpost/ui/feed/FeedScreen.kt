@@ -38,10 +38,7 @@ class FeedScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val context = LocalContext.current
 
-        LaunchedEffect(Unit) {
-            viewModel.fetchPosts(DEFAULT_QUERY)
-            viewModel.checkIfAuthorized() // TODO: remove / fix view model not cleared
-        }
+        LaunchedEffect(Unit) { viewModel.fetchPosts(DEFAULT_QUERY) }
 
         LaunchedEffect(state.query) { viewModel.fetchPosts(state.query) } // TODO: make cooldown
 

@@ -34,9 +34,9 @@ class AuthViewModel(
         }
     }
 
-    fun onEmailFieldValueChange(newValue: String) =
+    fun onEmailValueChange(newValue: String) =
         mutableState.update { it.copy(email = newValue) }
 
-    fun onPasswordFieldValueChange(newValue: String) =
+    fun onPasswordValueChange(newValue: String) =
         mutableState.update { it.copy(password = newValue) }
 }

@@ -1,5 +1,6 @@
 package com.example.blogpost.ui.profile
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.blogpost.domain.users.UsersRepository
 import com.example.blogpost.ui.common.StateViewModel
@@ -22,10 +23,14 @@ class ProfileViewModel(private val usersRepository: UsersRepository) :
         }
     }
 
-    fun onNameFieldValueChange(newValue: String) =
+    fun switchMode() = mutableState.update {
+        it.copy(isEditMode = !it.isEditMode)
+    }
+
+    fun onNameValueChange(newValue: String) =
         mutableState.update { it.copy(name = newValue) }
 
-    fun onEmailFieldValueChange(newValue: String) =
+    fun onEmailValueChange(newValue: String) =
         mutableState.update { it.copy(email = newValue) }
 
     fun onAvatarChange(newValue: String) =
@@ -35,13 +40,18 @@ class ProfileViewModel(private val usersRepository: UsersRepository) :
         name: String = state.value.name,
         email: String = state.value.email,
         avatarUrl: String = state.value.avatarUrl
-    ) {
-        mutableState.update {
-            it.copy(
-                name = name,
-                email = email,
-                avatarUrl = avatarUrl
-            )
+    ) = try {
+        viewModelScope.launch {
+            mutableState.update {
+                it.copy(
+                    name = name,
+                    email = email,
+                    avatarUrl = avatarUrl
+                )
+            }
+            usersRepository.updateProfile(name, email, avatarUrl)
         }
+    } catch (e: Exception) {
+        Log.d("profile", "Attempt to update profile: ${e.message.toString()}")
     }
 }
