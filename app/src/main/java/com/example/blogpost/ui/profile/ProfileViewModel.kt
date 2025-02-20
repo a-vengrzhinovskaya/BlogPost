@@ -21,4 +21,27 @@ class ProfileViewModel(private val usersRepository: UsersRepository) :
             }
         }
     }
+
+    fun onNameFieldValueChange(newValue: String) =
+        mutableState.update { it.copy(name = newValue) }
+
+    fun onEmailFieldValueChange(newValue: String) =
+        mutableState.update { it.copy(email = newValue) }
+
+    fun onAvatarChange(newValue: String) =
+        mutableState.update { it.copy(avatarUrl = newValue) } // TODO: upload image
+
+    fun updateProfile(
+        name: String = state.value.name,
+        email: String = state.value.email,
+        avatarUrl: String = state.value.avatarUrl
+    ) {
+        mutableState.update {
+            it.copy(
+                name = name,
+                email = email,
+                avatarUrl = avatarUrl
+            )
+        }
+    }
 }

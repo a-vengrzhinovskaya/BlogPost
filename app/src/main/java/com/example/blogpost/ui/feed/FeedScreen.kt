@@ -24,7 +24,7 @@ import com.example.blogpost.ui.feed.components.FeedTopBar
 import com.example.blogpost.ui.feed.components.PagerWithTabs
 import com.example.blogpost.ui.postDetails.PostDetailsScreen
 import com.example.blogpost.ui.postEditor.PostEditorScreen
-import com.example.blogpost.ui.settings.SettingsScreen
+import com.example.blogpost.ui.settings.SettingsMenuScreen
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
@@ -77,7 +77,7 @@ class FeedScreen : Screen {
                             }
                         }
                     },
-                    onSettingsButtonClick = remember { { navigator.push(SettingsScreen()) } }
+                    onSettingsButtonClick = remember { { navigator.push(SettingsMenuScreen()) } }
                 )
             }
         )
