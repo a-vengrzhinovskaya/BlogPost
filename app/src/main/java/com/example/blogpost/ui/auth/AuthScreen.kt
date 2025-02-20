@@ -42,9 +42,7 @@ class AuthScreen : Screen {
         val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(state.isAuthorizationSuccessful) {
-            if (state.isAuthorizationSuccessful) {
-                navigator.push(FeedScreen())
-            }
+            if (state.isAuthorizationSuccessful) navigator.replaceAll(FeedScreen())
         }
 
         Scaffold(
@@ -52,17 +50,17 @@ class AuthScreen : Screen {
                 AuthTopBar(
                     topBarText = "BlogPost",
                     topBarButtonText = "Продолжить без регистрации",
-                    onTopBarButtonClick = remember { { navigator.push(FeedScreen()) } }
+                    onTopBarButtonClick = remember { { navigator.replaceAll(FeedScreen()) } }
                 )
             },
             content = { paddingValues ->
                 AuthScreenBody(
                     state = state,
-                    onEmailFieldValueChange = remember {
-                        viewModel::onEmailFieldValueChange
+                    onEmailValueChange = remember {
+                        viewModel::onEmailValueChange
                     },
-                    onPasswordFieldValueChange = remember {
-                        viewModel::onPasswordFieldValueChange
+                    onPasswordValueChange = remember {
+                        viewModel::onPasswordValueChange
                     },
                     onRegisterClick = {},
                     onLoginClick = remember {
@@ -78,8 +76,8 @@ class AuthScreen : Screen {
 @Composable
 private fun AuthScreenBody(
     state: AuthScreenState,
-    onEmailFieldValueChange: (String) -> Unit,
-    onPasswordFieldValueChange: (String) -> Unit,
+    onEmailValueChange: (String) -> Unit,
+    onPasswordValueChange: (String) -> Unit,
     onRegisterClick: () -> Unit,
     onLoginClick: () -> Unit,
     paddingValues: PaddingValues
@@ -102,7 +100,7 @@ private fun AuthScreenBody(
         PrimaryTextField(
             value = state.email,
             labelText = "Электронная почта",
-            onValueChange = onEmailFieldValueChange
+            onValueChange = onEmailValueChange
         )
 
         LargeSpacer()
@@ -110,7 +108,7 @@ private fun AuthScreenBody(
         PasswordTextField(
             value = state.password,
             labelText = "Пароль",
-            onValueChange = onPasswordFieldValueChange
+            onValueChange = onPasswordValueChange
         )
 
         LargeSpacer()

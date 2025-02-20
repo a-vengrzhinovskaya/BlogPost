@@ -12,7 +12,7 @@ class GetPostsWithAuthorUseCase(
     private val postsRepository: PostsRepository,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) {
-    suspend operator fun invoke(query: String = ""): List<PostWithAuthor> =
+    suspend operator fun invoke(query: String): List<PostWithAuthor> =
         withContext(coroutineContext) {
             postsRepository.getPosts(query).first().map { post ->
                 val author = usersRepository.getUserById(post.authorId).first()

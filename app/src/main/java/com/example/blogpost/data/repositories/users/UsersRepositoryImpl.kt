@@ -1,6 +1,7 @@
 package com.example.blogpost.data.repositories.users
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.example.blogpost.data.network.BlogPostAPI
 import com.example.blogpost.data.network.models.users.UsersResponse
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.last
 import kotlin.coroutines.CoroutineContext
 
 private const val BLOGPOST_USER_ID = "blog_post_user_id"
@@ -72,14 +72,20 @@ class UsersRepositoryImpl(
         createUser(email, password, name, avatarUrl)
     }
 
+    override suspend fun updateProfile(name: String, email: String, avatarUrl: String) {
+        Log.d("profile", "profile updated")
+    }
+
     override suspend fun logOut() = sharedPreferences.edit { remove(BLOGPOST_USER_ID) }
 
-    override fun getCurrentUser(): Flow<User?> = flow {
-        getCurrentUserId().last().let {
-            val user = if (it != null) getUserById(it).last() else null
-            emit(user)
-        }
-    }.flowOn(coroutineContext)
+    override suspend fun deleteUser() {
+        logOut() // TODO:  Delete user
+    }
+
+    override suspend fun getCurrentUser(): User? =
+        getCurrentUserId().first()?.let { getUserById(it).first() }
+
+    override suspend fun isAuthorized(): Boolean = getCurrentUser() != null
 
     private suspend fun checkIfUserExists(email: String, password: String) = getUsers().first()
         .firstOrNull { it.email.lowercase() == email.lowercase() && it.password == password }

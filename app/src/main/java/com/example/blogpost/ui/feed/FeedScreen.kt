@@ -1,5 +1,6 @@
 package com.example.blogpost.ui.feed
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -22,8 +24,11 @@ import com.example.blogpost.ui.feed.components.FeedTopBar
 import com.example.blogpost.ui.feed.components.PagerWithTabs
 import com.example.blogpost.ui.postDetails.PostDetailsScreen
 import com.example.blogpost.ui.postEditor.PostEditorScreen
+import com.example.blogpost.ui.settings.SettingsMenuScreen
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
+
+private const val DEFAULT_QUERY = ""
 
 class FeedScreen : Screen {
     @Composable
@@ -31,10 +36,11 @@ class FeedScreen : Screen {
         val viewModel = koinViewModel<FeedViewModel>()
         val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
+        val context = LocalContext.current
 
-        LaunchedEffect(Unit) {
-            viewModel.fetchPosts()
-        }
+        LaunchedEffect(Unit) { viewModel.fetchPosts(DEFAULT_QUERY) }
+
+        LaunchedEffect(state.query) { viewModel.fetchPosts(state.query) } // TODO: make cooldown
 
         Scaffold(
             contentWindowInsets = WindowInsets(0.dp),
@@ -54,8 +60,21 @@ class FeedScreen : Screen {
             bottomBar = {
                 FeedBottomBar(
                     onFeedButtonClick = remember { { navigator.push(FeedScreen()) } },
-                    onAddButtonClick = remember { { navigator.push(PostEditorScreen()) } },
-                    onProfileButtonClick = remember { { navigator.push(PostEditorScreen()) } }
+                    onAddButtonClick =
+                    if (state.isAuthorized) {
+                        remember { { navigator.push(PostEditorScreen()) } }
+                    } else {
+                        remember {
+                            {
+                                Toast.makeText(
+                                    context,
+                                    "Войдите, чтобы создавать посты",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    },
+                    onSettingsButtonClick = remember { { navigator.push(SettingsMenuScreen()) } }
                 )
             }
         )

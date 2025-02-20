@@ -15,16 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.example.blogpost.R
-
-private const val BOTTOM_BAR_ICON_SIZE = 32
+import com.example.blogpost.ui.theme.mediumIconSize
 
 @Composable
 fun FeedBottomBar(
     onFeedButtonClick: () -> Unit,
     onAddButtonClick: () -> Unit,
-    onProfileButtonClick: () -> Unit
+    onSettingsButtonClick: () -> Unit
 ) {
     NavigationBar {
         Row(
@@ -33,7 +31,7 @@ fun FeedBottomBar(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             IconButton(
-                modifier = Modifier.size(BOTTOM_BAR_ICON_SIZE.dp),
+                modifier = Modifier.size(mediumIconSize),
                 onClick = onFeedButtonClick
             ) {
                 Icon(
@@ -44,7 +42,7 @@ fun FeedBottomBar(
             }
             IconButton(
                 modifier = Modifier
-                    .size(BOTTOM_BAR_ICON_SIZE.dp)
+                    .size(mediumIconSize)
                     .background(
                         color = MaterialTheme.colorScheme.primary,
                         shape = CircleShape
@@ -58,11 +56,11 @@ fun FeedBottomBar(
                 )
             }
             IconButton(
-                modifier = Modifier.size(BOTTOM_BAR_ICON_SIZE.dp),
-                onClick = onProfileButtonClick
+                modifier = Modifier.size(mediumIconSize),
+                onClick = onSettingsButtonClick
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_user),
+                    painter = painterResource(id = R.drawable.ic_settings),
                     tint = Color.Gray,
                     contentDescription = null
                 )

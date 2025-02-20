@@ -19,7 +19,13 @@ interface UsersRepository {
 
     suspend fun register(email: String, password: String, name: String, avatarUrl: String)
 
+    suspend fun updateProfile(name: String, email: String, avatarUrl: String)
+
     suspend fun logOut()
 
-    fun getCurrentUser(): Flow<User?>
+    suspend fun deleteUser()
+
+    suspend fun getCurrentUser(): User?
+
+    suspend fun isAuthorized(): Boolean
 }

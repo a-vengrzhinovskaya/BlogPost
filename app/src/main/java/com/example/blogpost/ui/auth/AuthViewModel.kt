@@ -10,6 +10,16 @@ import kotlinx.coroutines.launch
 class AuthViewModel(
     private val usersRepository: UsersRepository
 ) : StateViewModel<AuthScreenState>(AuthScreenState()) {
+    init {
+        viewModelScope.launch {
+            mutableState.update {
+                it.copy(
+                    isAuthorizationSuccessful = usersRepository.isAuthorized()
+                )
+            }
+        }
+    }
+
     fun login() {
         viewModelScope.launch {
             try {
@@ -24,9 +34,9 @@ class AuthViewModel(
         }
     }
 
-    fun onEmailFieldValueChange(newValue: String) =
+    fun onEmailValueChange(newValue: String) =
         mutableState.update { it.copy(email = newValue) }
 
-    fun onPasswordFieldValueChange(newValue: String) =
+    fun onPasswordValueChange(newValue: String) =
         mutableState.update { it.copy(password = newValue) }
 }

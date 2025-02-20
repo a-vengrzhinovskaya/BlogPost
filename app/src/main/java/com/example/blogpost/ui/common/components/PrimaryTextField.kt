@@ -15,6 +15,7 @@ fun PrimaryTextField(
     modifier: Modifier = Modifier,
     value: String,
     labelText: String,
+    isEnabled: Boolean = true,
     isSingleLine: Boolean = true,
     onValueChange: (String) -> Unit
 ) {
@@ -25,6 +26,7 @@ fun PrimaryTextField(
         shape = RoundedCornerShape(mediumDp),
         value = value,
         onValueChange = onValueChange,
+        enabled = isEnabled,
         singleLine = isSingleLine,
         label = { Text(text = labelText) }
     )

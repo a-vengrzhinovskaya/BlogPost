@@ -3,7 +3,7 @@ package com.example.blogpost.domain.users
 import com.example.blogpost.domain.posts.PostsRepository
 import com.example.blogpost.domain.posts.models.PostWithAuthor
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -12,18 +12,17 @@ class GetCurrentUserPostsUseCase(
     private val postsRepository: PostsRepository,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) {
-    suspend operator fun invoke(): List<PostWithAuthor> =
+    suspend operator fun invoke(query: String): List<PostWithAuthor> =
         withContext(coroutineContext) {
-            val postsWithAuthor = mutableListOf<PostWithAuthor>()
-            val currentUser = usersRepository.getCurrentUser().last()
-            currentUser?.postsIds?.forEach {
-                postsWithAuthor.add(
-                    PostWithAuthor(
-                        post = postsRepository.getPostById(it).last(),
-                        author = currentUser
-                    )
+            val currentUser = usersRepository.getCurrentUser()
+            currentUser?.postsIds?.map {
+                PostWithAuthor(
+                    post = postsRepository.getPostById(it).first(),
+                    author = currentUser
                 )
-            }
-            postsWithAuthor
+            } ?: emptyList<PostWithAuthor>()
+                .let { it ->
+                    it.filter { it.post.title.contains(query, ignoreCase = true) }
+                }
         }
 }
