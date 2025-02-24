@@ -32,7 +32,7 @@ class PostEditorScreen : Screen {
             topBar = {
                 PostEditorTopBar(
                     onBackClick = remember { { navigator.pop() } },
-                    onSaveClick = remember { { viewModel.savePost() } },
+                    onSaveClick = remember { { viewModel.publishPost() } },
                     onDeleteClick = remember { { viewModel.deletePost() } }
                 )
             },

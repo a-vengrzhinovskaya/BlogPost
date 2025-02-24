@@ -24,7 +24,7 @@ class UsersRepositoryImpl(
     private val usersCache = mutableListOf<User>()
 
     override fun getUsers(): Flow<List<User>> = flow {
-        val users = api.getAllUsers().records.map { it.toDomain() }
+        val users = api.getAllUsers().users.map { it.toDomain() }
         cacheUsers(users)
         emit(users)
     }.flowOn(coroutineContext)
@@ -34,28 +34,19 @@ class UsersRepositoryImpl(
         emit(user)
     }.flowOn(coroutineContext)
 
-    override fun createUser(
+    override suspend fun createUser(
         email: String,
         password: String,
         name: String,
         avatarUrl: String
-    ) = flow {
-        val user = api.createUser(
-            UsersResponse(
-                records = listOf(
-                    UsersResponse.Record(
-                        user = UsersResponse.Record.User(
-                            email = email,
-                            password = password,
-                            name = name,
-                            avatarUrl = avatarUrl
-                        )
-                    )
-                )
-            )
+    ) = api.createUser(
+        UsersResponse.UserRecord(
+            email = email,
+            password = password,
+            name = name,
+            avatarUrl = avatarUrl
         )
-        emit(user.records.first().toDomain())
-    }.flowOn(coroutineContext)
+    )
 
     override suspend fun login(email: String, password: String) =
         checkIfUserExists(email, password)

@@ -17,7 +17,7 @@ class PostsRepositoryImpl(
     private val postsCache = mutableListOf<Post>()
 
     override fun getPosts(query: String): Flow<List<Post>> = flow {
-        val posts = api.getAllPosts().records.map { it.toDomain() }
+        val posts = api.getAllPosts().posts.map { it.toDomain() }
         cachePosts(posts)
         emit(posts.filter { it.title.contains(query, ignoreCase = true) })
     }.flowOn(coroutineContext)
@@ -28,30 +28,21 @@ class PostsRepositoryImpl(
         emit(post)
     }.flowOn(coroutineContext)
 
-    override fun createPost(
+    override suspend fun createPost(
         authorId: String,
         date: String,
         title: String,
         body: String,
         imageUrl: String
-    ) = flow {
-        val post = api.createPost(
-            PostsResponse(
-                records = listOf(
-                    PostsResponse.Record(
-                        post = PostsResponse.Record.Post(
-                            authorId = listOf(authorId),
-                            date = date,
-                            title = title,
-                            body = body,
-                            imageUrl = imageUrl
-                        )
-                    )
-                )
-            )
+    ) = api.createPost(
+        PostsResponse.PostRecord(
+            authorId = authorId,
+            date = date,
+            title = title,
+            body = body,
+            imageUrl = imageUrl
         )
-        emit(post.records.first().toDomain())
-    }.flowOn(coroutineContext)
+    )
 
     private fun cachePosts(newPosts: List<Post>) = newPosts.forEach { newPost ->
         if (!postsCache.contains(newPost)) {

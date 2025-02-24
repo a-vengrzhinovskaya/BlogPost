@@ -10,29 +10,29 @@ import retrofit2.http.Path
 
 interface BlogPostAPI {
     //Users
-    @GET("Users")
+    @GET("users")
     suspend fun getAllUsers(): UsersResponse
 
-    @GET("Users/{id}")
-    suspend fun getUserById(@Path("id") id: String): UsersResponse.Record
+    @GET("users/{id}")
+    suspend fun getUserById(@Path("id") id: String): UsersResponse.UserRecord
 
-    @POST
-    suspend fun createUser(@Body data: UsersResponse): UsersResponse
+    @POST("users")
+    suspend fun createUser(@Body data: UsersResponse.UserRecord)
 
     //Posts
-    @GET("Posts")
+    @GET("posts")
     suspend fun getAllPosts(): PostsResponse
 
-    @GET("Posts/{id}")
-    suspend fun getPostById(@Path("id") id: String): PostsResponse.Record
+    @GET("posts/{id}")
+    suspend fun getPostById(@Path("id") id: String): PostsResponse.PostRecord
 
-    @POST("Posts")
-    suspend fun createPost(@Body data: PostsResponse): PostsResponse
+    @POST("posts")
+    suspend fun createPost(@Body data: PostsResponse.PostRecord)
 
     //Comments
-    @GET("Comments/{id}")
-    suspend fun getCommentById(@Path("id") id: String): CommentsResponse.Record
+    @GET("comments/{id}")
+    suspend fun getCommentById(@Path("id") id: String): CommentsResponse.CommentRecord
 
-    @POST("Comments")
-    suspend fun createComment(@Body data: CommentsResponse): CommentsResponse
+    @POST("comments")
+    suspend fun createComment(@Body data: CommentsResponse.CommentRecord)
 }

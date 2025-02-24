@@ -10,18 +10,12 @@ import org.koin.dsl.module
 import retrofit2.Converter
 import retrofit2.Retrofit
 
-private const val AUTH_TOKEN =
-    "patweGxhro1cpktAS.38e4f064906684ee908f841df9ed898e818c7590581f8b58ce0a2f70132c94b5"
-//TODO: убрать отсюда
-
 val networkModule = module {
-    val json = Json {
-        ignoreUnknownKeys = true
-    }
+    val json = Json { ignoreUnknownKeys = true }
 
     single<Retrofit> {
         Retrofit.Builder()
-            .baseUrl("https://api.airtable.com/v0/appPVJGE01IjRtB3M/")
+            .baseUrl("http://176.197.19.218:666/api/")
             .addConverterFactory(get<Converter.Factory>())
             .client(get<OkHttpClient>())
             .build()
@@ -36,12 +30,6 @@ val networkModule = module {
             .addInterceptor(
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
             )
-            .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer $AUTH_TOKEN")
-                    .build()
-                chain.proceed(request)
-            }
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader("Content-Type", "application/json")

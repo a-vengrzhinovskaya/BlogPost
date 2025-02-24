@@ -22,28 +22,19 @@ class CommentsRepositoryImpl(
         emit(comment)
     }.flowOn(coroutineContext)
 
-    override fun createComment(
+    override suspend fun createComment(
         postId: String,
         authorId: String,
         date: String,
         body: String
-    ) = flow {
-        val comment = api.createComment(
-            CommentsResponse(
-                records = listOf(
-                    CommentsResponse.Record(
-                        comment = CommentsResponse.Record.Comment(
-                            post = listOf(postId),
-                            author = listOf(authorId),
-                            date = date,
-                            body = body
-                        )
-                    )
-                )
-            )
+    ) = api.createComment(
+        CommentsResponse.CommentRecord(
+            post = postId,
+            authorId = authorId,
+            date = date,
+            body = body
         )
-        emit(comment.records.first().toDomain())
-    }.flowOn(coroutineContext)
+    )
 
     private fun cacheComments(newComments: List<Comment>) = newComments.forEach { newComment ->
         if (!commentsCache.contains(newComment)) {

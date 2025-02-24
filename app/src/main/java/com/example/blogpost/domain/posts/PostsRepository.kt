@@ -8,11 +8,11 @@ interface PostsRepository {
 
     fun getPostById(id: String): Flow<Post>
 
-    fun createPost(
+    suspend fun createPost(
         authorId: String,
         date: String,
         title: String,
         body: String,
         imageUrl: String
-    ): Flow<Post>
+    )
 }

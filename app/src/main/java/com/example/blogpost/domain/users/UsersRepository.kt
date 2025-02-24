@@ -8,12 +8,12 @@ interface UsersRepository {
 
     fun getUserById(id: String): Flow<User>
 
-    fun createUser(
+    suspend fun createUser(
         email: String,
         password: String,
         name: String,
         avatarUrl: String
-    ): Flow<User>
+    )
 
     suspend fun login(email: String, password: String)
 

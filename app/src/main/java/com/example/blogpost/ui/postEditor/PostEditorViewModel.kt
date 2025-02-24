@@ -1,8 +1,10 @@
 package com.example.blogpost.ui.postEditor
 
+import androidx.lifecycle.viewModelScope
 import com.example.blogpost.domain.posts.PostsRepository
 import com.example.blogpost.ui.common.StateViewModel
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class PostEditorViewModel(
     private val postsRepository: PostsRepository
@@ -19,7 +21,7 @@ class PostEditorViewModel(
         it.copy(attachedImageUrl = newValue)
     }
 
-    fun savePost() {
+    fun publishPost() = viewModelScope.launch {
 
     }
 

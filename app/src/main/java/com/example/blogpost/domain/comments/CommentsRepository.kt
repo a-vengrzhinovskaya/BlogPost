@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.Flow
 interface CommentsRepository {
     fun getCommentById(id: String): Flow<Comment>
 
-    fun createComment(
+    suspend fun createComment(
         postId: String,
         authorId: String,
         date: String,
         body: String
-    ): Flow<Comment>
+    )
 }
