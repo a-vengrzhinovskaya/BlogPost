@@ -30,6 +30,7 @@ import com.example.blogpost.ui.common.components.PasswordTextField
 import com.example.blogpost.ui.common.components.PrimaryButton
 import com.example.blogpost.ui.common.components.PrimaryTextField
 import com.example.blogpost.ui.feed.FeedScreen
+import com.example.blogpost.ui.singUp.SingUpScreen
 import com.example.blogpost.ui.theme.extraLargeDp
 import org.koin.androidx.compose.koinViewModel
 
@@ -56,16 +57,10 @@ class AuthScreen : Screen {
             content = { paddingValues ->
                 AuthScreenBody(
                     state = state,
-                    onEmailValueChange = remember {
-                        viewModel::onEmailValueChange
-                    },
-                    onPasswordValueChange = remember {
-                        viewModel::onPasswordValueChange
-                    },
-                    onRegisterClick = {},
-                    onLoginClick = remember {
-                        { viewModel.login() }
-                    },
+                    onEmailValueChange = remember { viewModel::onEmailValueChange },
+                    onPasswordValueChange = remember { viewModel::onPasswordValueChange },
+                    onRegisterClick = remember { { navigator.push(SingUpScreen()) } },
+                    onLoginClick = remember { { viewModel.login() } },
                     paddingValues = paddingValues
                 )
             }
@@ -94,32 +89,24 @@ private fun AuthScreenBody(
             text = "Авторизация",
             textAlign = TextAlign.Center
         )
-
         LargeSpacer()
-
         PrimaryTextField(
             value = state.email,
             labelText = "Электронная почта",
             onValueChange = onEmailValueChange
         )
-
         LargeSpacer()
-
         PasswordTextField(
             value = state.password,
             labelText = "Пароль",
             onValueChange = onPasswordValueChange
         )
-
         LargeSpacer()
-
         PrimaryButton(
             text = "Войти",
             onClick = onLoginClick
         )
-
         LargeSpacer()
-
         Text(
             modifier = Modifier
                 .fillMaxWidth()
