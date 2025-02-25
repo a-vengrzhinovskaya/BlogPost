@@ -8,7 +8,6 @@ import com.example.blogpost.domain.posts.PostsRepository
 import com.example.blogpost.ui.common.StateViewModel
 import com.example.blogpost.ui.common.models.posts.toUI
 import com.example.blogpost.ui.postDetails.models.toUI
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,7 +20,7 @@ class PostDetailsViewModel(
     fun fetchPostDetails(postId: String) {
         viewModelScope.launch {
             postsRepository.getPostById(postId).collectLatest { post ->
-                val commentsWithAuthor = getCommentsWithAuthorByPostIdUseCase.invoke(post.id)
+                val commentsWithAuthor = getCommentsWithAuthorByPostIdUseCase(post.id)
                 mutableState.update { postDetailsScreenState ->
                     postDetailsScreenState.copy(
                         post = post.toUI(),
@@ -54,19 +53,18 @@ class PostDetailsViewModel(
         }
     }
 
-    fun sendComment() {
-        viewModelScope.launch {
-            createCurrentUserCommentUseCase.invoke(
+    fun sendComment() = viewModelScope.launch {
+        try {
+            createCurrentUserCommentUseCase(
                 state.value.post.id,
                 state.value.currentUserComment
-            ).catch { throwable ->
-                Log.d("comment", throwable.message.toString())
-            }.collect {
-                mutableState.update {
-                    it.copy(currentUserComment = "")
-                }
-                fetchPostDetails(state.value.post.id)
+            )
+            mutableState.update {
+                it.copy(currentUserComment = "")
             }
+            fetchPostDetails(state.value.post.id)
+        } catch (e: Exception) {
+            Log.d("comment", "failed to send comment")
         }
     }
 }

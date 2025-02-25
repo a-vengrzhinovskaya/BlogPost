@@ -15,4 +15,6 @@ interface PostsRepository {
         body: String,
         imageUrl: String
     )
+
+    suspend fun likePost(postId: String, userId: String)
 }

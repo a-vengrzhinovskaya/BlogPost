@@ -44,6 +44,14 @@ class PostsRepositoryImpl(
         )
     )
 
+    override suspend fun likePost(postId: String, userId: String) {
+        try {
+            api.likePost(postId, userId)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     private fun cachePosts(newPosts: List<Post>) = newPosts.forEach { newPost ->
         if (!postsCache.contains(newPost)) {
             postsCache.add(newPost)

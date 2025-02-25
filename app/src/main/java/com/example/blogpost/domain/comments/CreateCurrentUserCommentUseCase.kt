@@ -1,17 +1,12 @@
 package com.example.blogpost.domain.comments
 
 import com.example.blogpost.domain.users.UsersRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlin.coroutines.CoroutineContext
 
 class CreateCurrentUserCommentUseCase(
     private val usersRepository: UsersRepository,
     private val commentsRepository: CommentsRepository,
-    private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) {
-    operator fun invoke(postId: String, body: String) = flow {
+    suspend operator fun invoke(postId: String, body: String) = try {
         val user = usersRepository.getCurrentUser()
             ?: error("Not authorized")
         commentsRepository.createComment(
@@ -20,6 +15,7 @@ class CreateCurrentUserCommentUseCase(
             date = System.currentTimeMillis().toString(),
             body = body
         )
-        emit(Unit)
-    }.flowOn(coroutineContext)
+    } catch (e: Exception) {
+        throw e
+    }
 }

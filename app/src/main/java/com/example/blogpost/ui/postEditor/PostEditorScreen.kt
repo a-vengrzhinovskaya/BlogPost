@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -28,10 +29,14 @@ class PostEditorScreen : Screen {
         val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
+        LaunchedEffect(state.isEditingComplete) {
+            if (state.isEditingComplete) navigator.pop()
+        }
+
         Scaffold(
             topBar = {
                 PostEditorTopBar(
-                    onBackClick = remember { { navigator.pop() } },
+                    onBackClick = remember { { viewModel.savePostDraft() } },
                     onSaveClick = remember { { viewModel.publishPost() } },
                     onDeleteClick = remember { { viewModel.deletePost() } }
                 )

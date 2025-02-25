@@ -5,6 +5,7 @@ import com.example.blogpost.data.network.models.posts.PostsResponse
 import com.example.blogpost.data.network.models.users.UsersResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -35,4 +36,7 @@ interface BlogPostAPI {
 
     @POST("comments")
     suspend fun createComment(@Body data: CommentsResponse.CommentRecord)
+
+    @PATCH("posts/{id}/like/{userId}")
+    suspend fun likePost(@Path("postId") postId: String, @Path("userId") userId: String)
 }
