@@ -16,10 +16,15 @@ class CommentsRepositoryImpl(
 ) : CommentsRepository {
     private val commentsCache = mutableListOf<Comment>()
 
-    override fun getCommentById(id: String): Flow<Comment> = flow {
-        val comment = commentsCache.firstOrNull { it.id == id } ?: api.getCommentById(id)
-            .toDomain() // TODO: chache
-        emit(comment)
+    override fun getCommentById(id: String, needToUpdate: Boolean): Flow<Comment> = flow {
+        val cachedComment = commentsCache.firstOrNull { it.id == id }
+        if (needToUpdate || cachedComment == null) {
+            val comment = api.getCommentById(id).toDomain()
+            emit(comment)
+            cacheComments(listOf(comment))
+        } else {
+            emit(cachedComment)
+        }
     }.flowOn(coroutineContext)
 
     override suspend fun createComment(

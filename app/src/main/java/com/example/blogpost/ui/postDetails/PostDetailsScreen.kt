@@ -75,6 +75,7 @@ private fun PostDetailsBody(
     ) {
         PostDetailsCard(
             post = state.post,
+            isLiked = state.isLiked,
             onLikeClick = onLikeClick,
             onCommentClick = remember { { showBottomSheet = true } }
         )

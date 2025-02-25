@@ -4,9 +4,9 @@ import com.example.blogpost.domain.posts.models.Post
 import kotlinx.coroutines.flow.Flow
 
 interface PostsRepository {
-    fun getPosts(query: String): Flow<List<Post>>
+    fun getPosts(query: String, needToUpdate: Boolean = false): Flow<List<Post>>
 
-    fun getPostById(id: String): Flow<Post>
+    fun getPostById(id: String, needToUpdate: Boolean = false): Flow<Post>
 
     suspend fun createPost(
         authorId: String,
@@ -16,5 +16,5 @@ interface PostsRepository {
         imageUrl: String
     )
 
-    suspend fun likePost(postId: String, userId: String)
+    suspend fun likePost(postId: String, userId: String): Boolean
 }

@@ -31,10 +31,10 @@ import com.example.blogpost.ui.theme.mediumDp
 @Composable
 fun PostDetailsCard(
     post: PostUI,
+    isLiked: Boolean,
     onLikeClick: () -> Unit,
     onCommentClick: () -> Unit
 ) {
-    var isPostLiked by remember { mutableStateOf(post.isLiked) }
     var likeButtonTint by remember { mutableStateOf(Color.LightGray) }
 
     PrimaryCard {
@@ -68,12 +68,7 @@ fun PostDetailsCard(
                 count = post.likesCount,
                 onClick = {
                     onLikeClick()
-                    isPostLiked = !isPostLiked
-                    if (isPostLiked) {
-                        likeButtonTint = Color.Gray
-                    } else {
-                        likeButtonTint = Color.LightGray
-                    }
+                    likeButtonTint = if (isLiked) Color.Gray else Color.LightGray
                 }
             )
 

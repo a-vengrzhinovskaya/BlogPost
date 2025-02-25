@@ -37,6 +37,6 @@ interface BlogPostAPI {
     @POST("comments")
     suspend fun createComment(@Body data: CommentsResponse.CommentRecord)
 
-    @PATCH("posts/{id}/like/{userId}")
-    suspend fun likePost(@Path("postId") postId: String, @Path("userId") userId: String)
+    @PATCH("posts/{postId}/like/{userId}")
+    suspend fun likePost(@Path("postId") postId: String, @Path("userId") userId: String): Boolean
 }

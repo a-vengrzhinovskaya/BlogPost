@@ -14,9 +14,12 @@ class GetCommentsWithAuthorByPostIdUseCase(
     private val usersRepository: UsersRepository,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) {
-    suspend operator fun invoke(postId: String): List<CommentWithAuthor> =
+    suspend operator fun invoke(
+        postId: String,
+        needToUpdate: Boolean = false
+    ): List<CommentWithAuthor> =
         withContext(coroutineContext) {
-            postsRepository.getPostById(postId).first().commentsIds.map { commentId ->
+            postsRepository.getPostById(postId, needToUpdate).first().commentsIds.map { commentId ->
                 val comment = commentsRepository.getCommentById(commentId).first()
                 CommentWithAuthor(
                     comment = comment,
