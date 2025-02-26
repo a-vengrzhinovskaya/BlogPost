@@ -2,6 +2,7 @@ package com.example.blogpost.ui.common.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +29,7 @@ fun PrimaryTextField(
         onValueChange = onValueChange,
         enabled = isEnabled,
         singleLine = isSingleLine,
-        label = { Text(text = labelText) }
+        label = { Text(text = labelText, style = MaterialTheme.typography.bodyMedium) }
     )
 }
 

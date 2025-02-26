@@ -1,5 +1,6 @@
 package com.example.blogpost.ui.postDetails
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,7 +25,6 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import com.example.blogpost.R
 import com.example.blogpost.ui.common.components.ExtraLargeSpacer
-import com.example.blogpost.ui.common.components.SmallSpacer
 import com.example.blogpost.ui.postDetails.components.CommentItem
 import com.example.blogpost.ui.postDetails.components.CommentTextField
 import com.example.blogpost.ui.postDetails.components.PostDetailsCard
@@ -55,7 +56,7 @@ class PostDetailsScreen(private val postId: String) : Screen {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun PostDetailsBody(
     paddingValues: PaddingValues,
@@ -87,7 +88,7 @@ private fun PostDetailsBody(
                 sheetState = screenState
             ) {
                 Column(modifier = Modifier.padding(extraLargeDp)) {
-                    Text(text = "Комментарии:")
+                    Text(text = "Комментарии:", style = MaterialTheme.typography.bodyMedium)
 
                     ExtraLargeSpacer()
                     LazyColumn(
@@ -99,16 +100,16 @@ private fun PostDetailsBody(
                                 author = it.author
                             )
                         }
+                        stickyHeader {
+                            CommentTextField(
+                                value = state.currentUserComment,
+                                labelText = "Комментарий",
+                                onValueChange = onCommentValueChange,
+                                trailingIconId = R.drawable.ic_send,
+                                onTrailingIconClick = onSendClick
+                            )
+                        }
                     }
-
-                    SmallSpacer()
-                    CommentTextField(
-                        value = state.currentUserComment,
-                        labelText = "Комментарий",
-                        onValueChange = onCommentValueChange,
-                        trailingIconId = R.drawable.ic_send,
-                        onTrailingIconClick = onSendClick
-                    )
                 }
             }
         }

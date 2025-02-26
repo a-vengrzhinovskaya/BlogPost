@@ -25,6 +25,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.example.blogpost.ui.auth.components.AuthTopBar
+import com.example.blogpost.ui.common.components.ExtraLargeSpacer
 import com.example.blogpost.ui.common.components.LargeSpacer
 import com.example.blogpost.ui.common.components.PasswordTextField
 import com.example.blogpost.ui.common.components.PrimaryButton
@@ -87,9 +88,10 @@ private fun AuthScreenBody(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = "Авторизация",
+            style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
-        LargeSpacer()
+        ExtraLargeSpacer()
         PrimaryTextField(
             value = state.email,
             labelText = "Электронная почта",
@@ -113,11 +115,29 @@ private fun AuthScreenBody(
                 .clickable { onRegisterClick() },
             textAlign = TextAlign.Center,
             text = buildAnnotatedString {
-                withStyle(style = SpanStyle(color = Color.Gray)) {
-                    append("Нет аккаунта?")
-                }
-                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                    append(" Зарегистрироваться")
+                with(MaterialTheme.typography.labelMedium) {
+                    withStyle(
+                        style = SpanStyle(
+                            color = Color.Gray,
+                            fontFamily = this.fontFamily,
+                            fontWeight = this.fontWeight,
+                            fontSize = this.fontSize,
+                            letterSpacing = this.letterSpacing
+                        )
+                    ) {
+                        append("Нет аккаунта?")
+                    }
+                    withStyle(
+                        style = SpanStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontFamily = this.fontFamily,
+                            fontWeight = this.fontWeight,
+                            fontSize = this.fontSize,
+                            letterSpacing = this.letterSpacing
+                        )
+                    ) {
+                        append(" Зарегистрироваться")
+                    }
                 }
             }
         )

@@ -48,7 +48,7 @@ fun PostEditorTopBar(
             shape = RoundedCornerShape(mediumDp),
             onClick = onSaveClick
         ) {
-            Text(text = "Опубликовать")
+            Text(text = "Опубликовать", style = MaterialTheme.typography.bodyMedium)
         }
         IconButton(
             modifier = Modifier.size(24.dp),

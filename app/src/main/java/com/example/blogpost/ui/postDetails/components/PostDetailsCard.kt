@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,11 +18,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import com.example.blogpost.R
+import com.example.blogpost.ui.common.components.ExtraLargeSpacer
 import com.example.blogpost.ui.common.components.FeedbackItem
+import com.example.blogpost.ui.common.components.LargeSpacer
 import com.example.blogpost.ui.common.components.MediumSpacer
 import com.example.blogpost.ui.common.components.PrimaryCard
 import com.example.blogpost.ui.common.components.SmallSpacer
@@ -38,12 +42,18 @@ fun PostDetailsCard(
     var likeButtonTint by remember { mutableStateOf(Color.LightGray) }
 
     PrimaryCard {
-        Text(text = post.title)
-
-        MediumSpacer()
-        Text(text = post.body)
-
-        MediumSpacer()
+        Text(
+            text = post.title,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
+        LargeSpacer()
+        Text(
+            text = post.body,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Justify
+        )
+        ExtraLargeSpacer()
         SubcomposeAsyncImage(
             modifier = Modifier
                 .size(200.dp)
@@ -54,7 +64,6 @@ fun PostDetailsCard(
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
-
         MediumSpacer()
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -71,7 +80,6 @@ fun PostDetailsCard(
                     likeButtonTint = if (isLiked) Color.Gray else Color.LightGray
                 }
             )
-
             SmallSpacer()
             FeedbackItem(
                 modifier = Modifier.size(24.dp),

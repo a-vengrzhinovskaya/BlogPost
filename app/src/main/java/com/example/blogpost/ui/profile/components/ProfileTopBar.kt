@@ -46,6 +46,7 @@ fun ProfileTopBar(
         Text(
             modifier = Modifier.weight(1f),
             text = text,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )
         IconButton(
