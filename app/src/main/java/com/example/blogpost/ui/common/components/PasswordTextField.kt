@@ -44,21 +44,24 @@ fun PasswordTextField(
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
             val icon = if (passwordVisible) {
-                R.drawable.ic_password_visibility_off
-            } else {
                 R.drawable.ic_password_visibility_on
+            } else {
+                R.drawable.ic_password_visibility_off
             }
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(painter = painterResource(id = icon), null)
             }
         },
         singleLine = true,
-        label = { Text(text = labelText) }
+        label = {
+            Text(text = labelText, style = MaterialTheme.typography.bodyMedium)
+        }
     )
     AnimatedVisibility(visible = errorMessage != null) {
         Text(
             text = errorMessage ?: "",
             color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(start = smallDp)
         )
     }
