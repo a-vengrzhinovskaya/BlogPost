@@ -12,12 +12,15 @@ class GetCurrentUserPostsUseCase(
     private val postsRepository: PostsRepository,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) {
-    suspend operator fun invoke(query: String): List<PostWithAuthor> =
+    suspend operator fun invoke(
+        query: String,
+        needToUpdate: Boolean = false
+    ): List<PostWithAuthor> =
         withContext(coroutineContext) {
             val currentUser = usersRepository.getCurrentUser()
             currentUser?.postsIds?.map {
                 PostWithAuthor(
-                    post = postsRepository.getPostById(it).first(),
+                    post = postsRepository.getPostById(id = it, needToUpdate = needToUpdate).first(),
                     author = currentUser
                 )
             } ?: emptyList<PostWithAuthor>()

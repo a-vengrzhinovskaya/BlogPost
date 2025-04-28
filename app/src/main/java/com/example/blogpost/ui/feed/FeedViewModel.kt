@@ -24,16 +24,14 @@ class FeedViewModel(
         }
     }
 
-    fun fetchPosts(query: String) {
-        viewModelScope.launch {
-            val postsWithAuthor = getPostsWithAuthorUseCase.invoke(query)
-            val currentUserPosts = getCurrentUserPostsUseCase.invoke(query)
-            mutableState.update { feedScreenState ->
-                feedScreenState.copy(
-                    postsWithAuthor = postsWithAuthor.map { it.toUI() },
-                    currentUserPosts = currentUserPosts.map { it.toUI() }
-                )
-            }
+    fun fetchPosts(query: String, needToUpdate: Boolean = false) = viewModelScope.launch {
+        val postsWithAuthor = getPostsWithAuthorUseCase(query, needToUpdate)
+        val currentUserPosts = getCurrentUserPostsUseCase(query, needToUpdate)
+        mutableState.update { feedScreenState ->
+            feedScreenState.copy(
+                postsWithAuthor = postsWithAuthor.map { it.toUI() },
+                currentUserPosts = currentUserPosts.map { it.toUI() }
+            )
         }
     }
 

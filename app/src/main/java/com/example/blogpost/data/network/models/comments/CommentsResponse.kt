@@ -1,25 +1,19 @@
 package com.example.blogpost.data.network.models.comments
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommentsResponse(
-    val records: List<Record>
+    val comments: List<CommentRecord>
 ) {
     @Serializable
-    data class Record(
-        @SerialName("fields")
-        val comment: Comment,
-        val id: String = ""
-    ) {
-        @Serializable
-        data class Comment(
-            val author: List<String>,
-            val body: String,
-            val date: String,
-            val post: List<String>
-        )
-    }
+    data class CommentRecord(
+        @SerialName("_id")
+        val id: String = "",
+        val authorId: String,
+        val body: String,
+        val date: String,
+        val post: String
+    )
 }

@@ -7,14 +7,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
 import com.example.blogpost.ui.common.components.ExtraSmallSpacer
 import com.example.blogpost.ui.common.components.PrimaryCard
 import com.example.blogpost.ui.theme.extraLargeDp
@@ -36,11 +35,11 @@ fun NotificationSettingItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(horizontalAlignment = Alignment.Start) {
-                Text(text = settingName)
+                Text(text = settingName, style = MaterialTheme.typography.bodyMedium)
                 ExtraSmallSpacer()
                 Text(
                     text = settingDescription,
-                    style = TextStyle(fontSize = 12.sp), // TODO: to theme 
+                    style = MaterialTheme.typography.labelMedium,
                     color = Color.Gray
                 )
             }

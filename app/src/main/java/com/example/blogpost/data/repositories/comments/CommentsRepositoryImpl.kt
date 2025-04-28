@@ -16,34 +16,30 @@ class CommentsRepositoryImpl(
 ) : CommentsRepository {
     private val commentsCache = mutableListOf<Comment>()
 
-    override fun getCommentById(id: String): Flow<Comment> = flow {
-        val comment = commentsCache.firstOrNull { it.id == id } ?: api.getCommentById(id)
-            .toDomain() // TODO: chache
-        emit(comment)
+    override fun getCommentById(id: String, needToUpdate: Boolean): Flow<Comment> = flow {
+        val cachedComment = commentsCache.firstOrNull { it.id == id }
+        if (needToUpdate || cachedComment == null) {
+            val comment = api.getCommentById(id).toDomain()
+            emit(comment)
+            cacheComments(listOf(comment))
+        } else {
+            emit(cachedComment)
+        }
     }.flowOn(coroutineContext)
 
-    override fun createComment(
+    override suspend fun createComment(
         postId: String,
         authorId: String,
         date: String,
         body: String
-    ) = flow {
-        val comment = api.createComment(
-            CommentsResponse(
-                records = listOf(
-                    CommentsResponse.Record(
-                        comment = CommentsResponse.Record.Comment(
-                            post = listOf(postId),
-                            author = listOf(authorId),
-                            date = date,
-                            body = body
-                        )
-                    )
-                )
-            )
+    ) = api.createComment(
+        CommentsResponse.CommentRecord(
+            post = postId,
+            authorId = authorId,
+            date = date,
+            body = body
         )
-        emit(comment.records.first().toDomain())
-    }.flowOn(coroutineContext)
+    )
 
     private fun cacheComments(newComments: List<Comment>) = newComments.forEach { newComment ->
         if (!commentsCache.contains(newComment)) {

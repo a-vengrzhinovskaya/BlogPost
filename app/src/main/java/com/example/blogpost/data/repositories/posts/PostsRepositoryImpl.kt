@@ -16,42 +16,47 @@ class PostsRepositoryImpl(
 ) : PostsRepository {
     private val postsCache = mutableListOf<Post>()
 
-    override fun getPosts(query: String): Flow<List<Post>> = flow {
-        val posts = api.getAllPosts().records.map { it.toDomain() }
+    override fun getPosts(query: String, needToUpdate: Boolean): Flow<List<Post>> = flow {
+        val posts = if (!needToUpdate && postsCache.isNotEmpty()) {
+            postsCache
+        } else {
+            api.getAllPosts().posts.map { it.toDomain() }
+        }
         cachePosts(posts)
         emit(posts.filter { it.title.contains(query, ignoreCase = true) })
     }.flowOn(coroutineContext)
 
-    override fun getPostById(id: String): Flow<Post> = flow {
-        val post =
+    override fun getPostById(id: String, needToUpdate: Boolean): Flow<Post> = flow {
+        val post = if (needToUpdate) {
+            api.getPostById(id).toDomain()
+        } else {
             postsCache.firstOrNull { it.id == id } ?: api.getPostById(id).toDomain()
+        }
         emit(post)
     }.flowOn(coroutineContext)
 
-    override fun createPost(
+    override suspend fun createPost(
         authorId: String,
         date: String,
         title: String,
         body: String,
         imageUrl: String
-    ) = flow {
-        val post = api.createPost(
-            PostsResponse(
-                records = listOf(
-                    PostsResponse.Record(
-                        post = PostsResponse.Record.Post(
-                            authorId = listOf(authorId),
-                            date = date,
-                            title = title,
-                            body = body,
-                            imageUrl = imageUrl
-                        )
-                    )
-                )
-            )
+    ) = api.createPost(
+        PostsResponse.PostRecord(
+            authorId = authorId,
+            date = date,
+            title = title,
+            body = body,
+            imageUrl = imageUrl
         )
-        emit(post.records.first().toDomain())
-    }.flowOn(coroutineContext)
+    )
+
+    override suspend fun likePost(postId: String, userId: String): Boolean =
+        try {
+            api.likePost(postId, userId)
+        } catch (e: Exception) {
+            throw e
+        }
 
     private fun cachePosts(newPosts: List<Post>) = newPosts.forEach { newPost ->
         if (!postsCache.contains(newPost)) {

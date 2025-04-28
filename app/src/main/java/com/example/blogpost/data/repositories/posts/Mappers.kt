@@ -3,13 +3,13 @@ package com.example.blogpost.data.repositories.posts
 import com.example.blogpost.data.network.models.posts.PostsResponse
 import com.example.blogpost.domain.posts.models.Post
 
-fun PostsResponse.Record.toDomain() = Post(
+fun PostsResponse.PostRecord.toDomain() = Post(
     id = id,
-    date = post.date,
-    title = post.title,
-    imageUrl = post.imageUrl,
-    body = post.body,
-    authorId = post.authorId.first(),
-    usersLikedIds = post.usersLikedIds ?: emptyList(),
-    commentsIds = post.commentsIds ?: emptyList()
+    date = date,
+    title = title,
+    imageUrl = imageUrl,
+    body = body,
+    authorId = authorId,
+    usersLikedIds = usersLikedIds ?: emptyList(),
+    commentsIds = commentsIds ?: emptyList()
 )

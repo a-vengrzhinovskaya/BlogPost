@@ -53,12 +53,15 @@ fun PasswordTextField(
             }
         },
         singleLine = true,
-        label = { Text(text = labelText) }
+        label = {
+            Text(text = labelText, style = MaterialTheme.typography.bodyMedium)
+        }
     )
     AnimatedVisibility(visible = errorMessage != null) {
         Text(
             text = errorMessage ?: "",
             color = MaterialTheme.colorScheme.error,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(start = smallDp)
         )
     }
